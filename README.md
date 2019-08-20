@@ -43,12 +43,12 @@ It needs 4 GPUs and takes around a week.
 ## Fine-tune on Vision-and-Language Tasks
 We fine-tune our LXMERT pre-trained model on each task with following hyper-parameters:
 
-|      | Batch Size   | Learning Rate   | Epochs  | Load Answers  |
+|Dataset      | Batch Size   | Learning Rate   | Epochs  | Load Answers  |
 |---   |:---:|:---:   |:---:|:---:|
 |VQA   | 32  | 5e-5   | 4   | Yes |
 |GQA   | 32  | 1e-5   | 4   | Yes |
 |NLVR2 | 32  | 5e-5   | 4   | No  |
-|VIZWIZ| 32  | 1e-4   | 4   | Yes |
+
 Although the fine-tuning processes are almost the same except for these different hyper-parameters,
 we next provide descriptions for each dataset to take care of all details.
 ### VQA
