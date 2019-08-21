@@ -10,16 +10,16 @@ PyTorch code for our EMNLP 2019 paper ["LXMERT: Learning Cross-Modality Encoder 
 The accuracy achieved by LXMERT with this code base:
 
 
-| Split            | VQA     | GQA     | NLVR2  |
+| Split            | [VQA](https://visualqa.org/)     | [GQA](https://cs.stanford.edu/people/dorarad/gqa/)     | [NLVR2](http://lil.nlp.cornell.edu/nlvr/)  |
 |-----------       |:----:   |:---:    |:------:|
 | local validation | 69.90%  | 59.80%  | 74.10% |
 | test-dev         | 72.42%  | 60.00%  | 74.50% (test-P) |
 | test-standard    | 72.54%  | 60.33%  | 76.18% (test-U) |
 
 All the results in the table are produced exactly with this code base.
-Since VQA and GQA test server only allow limited number of 'test-standard' submissions,
-we use our remaining submission entry from VQA/GQA challenges 2019 to get these results.
-For NLVR2, we only test once on the unpublished test set (test-U).
+Since [VQA](https://evalai.cloudcv.org/web/challenges/challenge-page/163/overview) and [GQA](https://evalai.cloudcv.org/web/challenges/challenge-page/225/overview) test servers only allow limited number of 'test-standard' submissions,
+we use our remaining submission entry from [VQA](https://visualqa.org/challenge.html)/[GQA](https://cs.stanford.edu/people/dorarad/gqa/challenge.html) challenges 2019 to get these results.
+For [NLVR2](http://lil.nlp.cornell.edu/nlvr/), we only test once on the unpublished test set (test-U).
 
 
 
@@ -30,7 +30,8 @@ mkdir -p snap/pretrained
 wget http://nlp.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
 ```
 
-If the downloading speed is slow, the pre-trained model could also be downloaded from [other sources](#alternative-data-download-links), 
+
+If the downloading speed is slow, the pre-trained model could also be downloaded from [other sources](#alternative-dataset-and-features-download-links), 
 and please place it at `snap/pretrained/model_LXRT.pth`.
 
 We also provide the instructions to pre-train the model in [pre-training](#pre-training).
@@ -53,15 +54,16 @@ we provide descriptions for each dataset to take care of all details.
 #### Fine-tuning
 * Please make sure the LXMERT pre-trained model is either [downloaded](#pre-trained-models) or [pre-trained](#pre-training).
 
-* Download the re-distributed json files for VQA 2.0 dataset.
+* Download the re-distributed json files for VQA 2.0 dataset. The raw VQA 2.0 dataset could be downloaded from the [official website](https://visualqa.org/download.html).
 ```
 mkdir -p data/vqa
 wget nlp.cs.unc.edu/data/lxmert_data/vqa/train.json -P data/vqa/
 wget nlp.cs.unc.edu/data/lxmert_data/vqa/nominival.json -P  data/vqa/
 wget nlp.cs.unc.edu/data/lxmert_data/vqa/minival.json -P data/vqa/
 ```
-* Download faster-rcnn features for MS COCO training and validation images (VQA 2.0 is collected on MS COCO dataset).
-Or extracted them as described in [feature extraction](#faster-r-cnn-feature-extraction)
+* Download faster-rcnn features for MS COCO train2014 (17 GB) and val2014 (8 GB) images (VQA 2.0 is collected on MS COCO dataset).
+The image features are
+also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
 ```
 mkdir -p data/mscoco_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
@@ -95,7 +97,7 @@ bash run/vqa_test.bash 0 vqa_lxr955_results --test minival --load snap/vqa/vqa_l
 ```
 wget nlp.cs.unc.edu/data/lxmert_data/vqa/test.json -P data/vqa/
 ```
-- Download the faster rcnn features for MS COCO test split.
+- Download the faster rcnn features for MS COCO test2015 split (16 GB).
 ```
 wget nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/test2015_obj36.zip -P data/mscoco_imgfeat
 unzip data/mscoco_imgfeat/test2015_obj36.zip -d data && rm data/mscoco_imgfeat/test2015_obj36.zip
@@ -117,25 +119,27 @@ In general, after registration, the only thing remaining is to upload the `test_
 The results with the code base are also publicly shown on the [VQA 2.0 leaderboard](
 https://evalai.cloudcv.org/web/challenges/challenge-page/163/leaderboard/498
 ) with entry `LXMERT github version`.
+
+
 ### GQA
 
 #### Fine-tuning
 * Please make sure the LXMERT pre-trained model is either [downloaded](#pre-trained-models) or [pre-trained](#pre-training).
 
 * Download the re-distributed json files for GQA balanced version dataset.
-Or you could download and process from the raw data.
 The original GQA dataset is available [here](https://cs.stanford.edu/people/dorarad/gqa/download.html) and the script to 
-convert the dataset to our json version is under `data/gqa/process_raw_data_scripts`.
+preprocess these datasets is under `data/gqa/process_raw_data_scripts`.
 ```
 mkdir -p data/gqa
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/train.json -P data/gqa/
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/valid.json -P data/gqa/
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/testdev.json -P data/gqa/
 ```
-* Download faster-rcnn features for Vsiual Genome and GQA images (around 30G in total).
+* Download faster-rcnn features for Vsiual Genome and GQA images (30 GB).
 GQA's training and validation data are collected from Visual Genome.
-Its testing images come from MS COCO test set (I have verified this with GQA author [Drew A. Hudson](https://www.linkedin.com/in/drew-a-hudson/).)
-The feature could also be extracted from faster-rcnn following the descriptions in [feature extraction](#faster-r-cnn-feature-extraction).
+Its testing images come from MS COCO test set (I have verified this with GQA author [Drew A. Hudson](https://www.linkedin.com/in/drew-a-hudson/)).
+The image features are
+also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
 ```
 mkdir -p data/vg_gqa_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
@@ -214,10 +218,11 @@ git clone https://github.com/lil-lab/nlvr.git data/nlvr2/nlvr
 bash -c "cd data/nlvr2/process_raw_data_scripts && python process_dataset.py"
 ```
 
-- Download the NLVR2 image features for train+valid splits. The image features are
+- Download the NLVR2 image features for train (21 GB) & valid (1.6 GB) splits. 
+The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
 To access to the original images, please follow the instructions on [NLVR2 official Github](https://github.com/lil-lab/nlvr/tree/master/nlvr2).
-The images could either be downloaded with the urls or by signing an agreement form for data usage. 
+The images could either be downloaded with the urls or by signing an agreement form for data usage. And the feature could be extracted as described in [feature extraction](#faster-r-cnn-feature-extraction)
 ```
 mkdir -p data/nlvr2_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/train_obj36.zip -P data/nlvr2_imgfeat
@@ -243,7 +248,7 @@ bash run/nlvr2_finetune.bash 0 nlvr2_lxr955
 ```
 
 #### Inference on Public Test Split
-- Download NLVR2 image features for the public test split.
+- Download NLVR2 image features for the public test split (1.6 GB).
 ```
 wget nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/test_obj36.zip -P data/nlvr2_imgfeat
 unzip data/nlvr2_imgfeat/test_obj36.zip -d data/nlvr2_imgfeat && rm data/nlvr2_imgfeat/test_obj36.zip
@@ -499,8 +504,11 @@ wget https://www.dropbox.com/s/bacig173qnxddvz/resnet101_faster_rcnn_final_iter_
 docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/lxrt_public/data/nlvr2_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
 > Note0: If it says something about 'privilege', add `sudo` before the command.
+>
 > Note1: If it says something about '--gpus all', it means that the GPU options are not correctly set. Please read [Docker GPU Access](#docker-gpu-access) for the instructions to allow GPU access.
+>
 > Note2: /path/to/nlvr2/images would contain subfolders `train`, `dev`, `test1` and `test2`.
+>
 > Note3: Both paths '/path/to/nlvr2/images/' and '/path/to/lxrt_public' requires absolute paths.
 
 
