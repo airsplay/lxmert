@@ -358,6 +358,7 @@ REPO ROOT
  |-- src
 ```
 
+Please also kindly contact us if anything is missing!
 
 ### Google Drive
 As an alternative way to download feature from our UNC server,
@@ -505,14 +506,16 @@ We thank [hugginface](https://github.com/huggingface) for releasing the excellen
 
 We thank all the authors and annotators of vision-and-language datasets 
 (i.e., 
-MS COCO, 
-Visual Genome,
-VQA,
-GQA,
-NLVR2
+[MS COCO](http://cocodataset.org/#home), 
+[Visual Genome](https://visualgenome.org/),
+[VQA](https://visualqa.org/),
+[GQA](https://cs.stanford.edu/people/dorarad/gqa/),
+[NLVR2](http://lil.nlp.cornell.edu/nlvr/)
 ), 
 which allows us to develop a pre-trained model for vision-and-language tasks.
 
 We thank [Alane Suhr](http://alanesuhr.com/) for helping test LXMERT on NLVR2 unreleased test split.
+
+We also thank you to look into our code. Please kindly contact us if you find any issue. Comments are always welcome.
 
 LXRThanks.
