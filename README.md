@@ -17,7 +17,6 @@ The accuracy achieved by LXMERT with this code base:
 | test-standard    | 72.54%  | 60.33%  | 76.18% (test-U) |
 
 All the results in the table are produced exactly by this code base.
-The result might be slightly different from the results in our paper 
 VQA and GQA allow limited number of test-standard submissions,
 we use our remaining submission entry from VQA/GQA challenges this year to get these results.
 For NLVR2, we only test once on the unpublished test set (test-U).
