@@ -433,15 +433,13 @@ a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationsh
 ## Faster R-CNN Feature Extraction
 
 
-We use the Faster R-CNN feature extractor provided in <>
+We use the Faster R-CNN feature extractor provided in ["Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering", CVPR 2018](https://arxiv.org/abs/1707.07998)
 and released at [bottom-up-attention github repo](https://github.com/peteanderson80/bottom-up-attention).
 It was trained on [Visual Genome](https://visualgenome.org/) dataset and implemented based on a specific [Caffe](https://caffe.berkeleyvision.org/) version.
 To extract object features, you could follow the installation instructions in the bottom-up attention github [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention).
 
-The features extracted from this faster-rcnn are provided.
-
-Since the specific [Caffe](https://caffe.berkeleyvision.org/) version is designed to 
-we also provide a docker image which takes care of all these dependencies.
+Since the specific [Caffe](https://caffe.berkeleyvision.org/) version  is used,  
+we provide a docker image which takes care of all these dependencies.
 ### Feature Extraction with Docker
 The built docker file is released at docker hub and could be pulled with command:
 ```
@@ -461,12 +459,29 @@ The two requirements could be installed following the instructions on the websit
 
 For docker with old version, either updating it to docker 19.03 or using command `--runtime=nvidia` instead of `--gpus all' should help.
 
-An example for NLVR2 is here:
+#### Feature Extraction for NLVR2 
+We take NLVR2 as an example to do feature extraction.
+
+- Please first following the instruction on [NLVR2 official github](https://github.com/lil-lab/nlvr/tree/master/nlvr2) to get the images.
+
+- Run docker container with command:
 ```
-docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/lxrt_public/data/nlvr2_img
-feat:/workspace/features --rm -it bottom-up-attention bash
+docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/lxrt_public/data/nlvr2_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
 Note: /path/to/nlvr2/images would contain subfolders `train`, `dev`, `test1` and `test2`.
+Note2: Both paths /path/to/nlvr2/images/ and /path/to/lxrt_public requires the absolute path.
+
+- Extract the features **inside the docker container**.
+```
+cd /workspace/features
+CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split train
+CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split valid
+CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split test
+```
+- It would takes around 5~6 hours for the training split and 1~2 hours for the valid and test splits. Since it is slow, I recommend to run them parallelly if there are multiple GPUs. It could be achived by changing the `gpu_id` in `CUDA_VISIBLE_DEVICES=$gpu_id`.
+
+- The features would be saved in `train.tsv`, `valid.tsv`, and `test.tsv` under dir `data/nlvr2_imgfeat` outside the docker container. I have verified the extracted image features are the same to the one I provided in [NLVR2 fine-tuning](#nlvr2).
+
 
 ## Reference
 If you find this project helps, please cite our paper :)
