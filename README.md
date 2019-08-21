@@ -16,11 +16,10 @@ The accuracy achieved by LXMERT with this code base:
 | test-dev         | 72.42%  | 60.00%  | 74.50% (test-P) |
 | test-standard    | 72.54%  | 60.33%  | 76.18% (test-U) |
 
-All the results in the table are produced exactly by this code base.
-VQA and GQA allow limited number of test-standard submissions,
-we use our remaining submission entry from VQA/GQA challenges this year to get these results.
+All the results in the table are produced exactly with this code base.
+Since VQA and GQA test server only allow limited number of 'test-standard' submissions,
+we use our remaining submission entry from VQA/GQA challenges 2019 to get these results.
 For NLVR2, we only test once on the unpublished test set (test-U).
-
 
 
 
@@ -31,10 +30,10 @@ mkdir -p snap/pretrained
 wget http://nlp.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
 ```
 
-If the downloading speed is limited, our pre-trained model could also be downloaded from [other sources](#alternative-data-download-links), 
-and please put it with path `snap/pretrained/model_LXRT.pth`.
+If the downloading speed is slow, the pre-trained model could also be downloaded from [other sources](#alternative-data-download-links), 
+and please place it at `snap/pretrained/model_LXRT.pth`.
 
-We also provide the instructions to pre-train the model as described in [Sec pre-training](#pre-training).
+We also provide the instructions to pre-train the model in [pre-training](#pre-training).
 It needs 4 GPUs and takes around a week.
 
 
@@ -48,8 +47,8 @@ We fine-tune our LXMERT pre-trained model on each task with following hyper-para
 |GQA   | 32  | 1e-5   | 4   | Yes |
 |NLVR2 | 32  | 5e-5   | 4   | No  |
 
-Although the fine-tuning processes are almost the same except for these different hyper-parameters,
-we next provide descriptions for each dataset to take care of all details.
+Although the fine-tuning processes are almost the same except for different hyper-parameters,
+we provide descriptions for each dataset to take care of all details.
 ### VQA
 #### Fine-tuning
 * Please make sure the LXMERT pre-trained model is either [downloaded](#pre-trained-models) or [pre-trained](#pre-training).
@@ -319,9 +318,33 @@ unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 ```
 
-- Run on the whole MS COCO + Visual Genome datasets:
+- Run on the whole MS COCO + Visual Genome datasets. Here, we take a simple one-step pre-training strategy rather than the two-steps (10 epochs without image QA and 10 epochs with image QA) methods describe in our paper. We re-run the pre-training and did not find much difference with these two strategies.
 ```
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
+```
+
+- Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
+```
+python src/pretrain/lxmert_pretrain_new.py \
+    # The pre-training tasks
+    --taskMaskLM --taskObjPredict --taskMatched --taskQA \  
+    # Vision subtasks
+    # obj / attr: detected object/attribute label prediction.
+    # feat: RoI feature regression.
+    --visualLosses obj,attr,feat \
+    # Mask rate for words and objects
+    --wordMaskRate 0.15 --objMaskRate 0.15 \
+    # Training and validation sets
+    # mscoco_nominival + mscoco_minival = mscoco_val2014
+    # visual genome - mscoco = vgnococo
+    --train mscoco_train,mscoco_nominival,vgnococo --valid mscoco_minival \
+    # Number of layers in each encoder
+    --llayers 9 --xlayers 5 --rlayers 5 \
+    # Train from scratch (Using intialized weights) instead of loading BERT weights.
+    --fromScratch \
+    # Hyper parameters
+    --batchSize 256 --optim bert --lr 1e-4 --epochs 12 \
+    --tqdm --output $output ${@:2}
 ```
 
 
@@ -353,6 +376,7 @@ REPO ROOT
  |    |-- gqa -- *.json
  |    |-- nlvr2_imgfeat -- *.tsv
  |    |-- nlvr2 -- *.json
+ |    |-- lxmert -- *.json          # Pre-training data
  | 
  |-- snap
  |-- src
@@ -408,6 +432,7 @@ Baidu Drive Root
  |-- gqa -- *.json
  |-- nlvr2_imgfeat -- *.zip.*   # Please read README.txt under this folder
  |-- nlvr2 -- *.json
+ |-- lxmert -- *.json
  | 
  |-- pretrained -- model_LXRT.pth
 ```
@@ -433,13 +458,12 @@ a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationsh
 ## Faster R-CNN Feature Extraction
 
 
-We use the Faster R-CNN feature extractor provided in ["Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering", CVPR 2018](https://arxiv.org/abs/1707.07998)
-and released at [bottom-up-attention github repo](https://github.com/peteanderson80/bottom-up-attention).
+We use the Faster R-CNN feature extractor demonstrated in ["Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering", CVPR 2018](https://arxiv.org/abs/1707.07998)
+and its code released at [bottom-up-attention github repo](https://github.com/peteanderson80/bottom-up-attention).
 It was trained on [Visual Genome](https://visualgenome.org/) dataset and implemented based on a specific [Caffe](https://caffe.berkeleyvision.org/) version.
-To extract object features, you could follow the installation instructions in the bottom-up attention github [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention).
+To extract object features, you could follow the installation instructions in the bottom-up attention github [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention). 
 
-Since the specific [Caffe](https://caffe.berkeleyvision.org/) version  is used,  
-we provide a docker image which takes care of all these dependencies.
+We also provide a docker image which takes care of all these dependencies.
 ### Feature Extraction with Docker
 The built docker file is released at docker hub and could be pulled with command:
 ```
@@ -448,37 +472,47 @@ sudo docker pull airsplay/bottom-up-attention
 After pulling the docker, you could run docker container:
 ```
 docker run --gpus all -v /path/to/images:/workspace/images:ro -v /path/to/imgfeat_folder
-feat:/workspace/features --rm -it bottom-up-attention bash
+feat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
 `-v` mounts the folders on host os to the docker image container. 
 
-Note that the purpose of the option `--gpus all` is to expose GPU devices to the docker container, and it requires `docker` version >= 19.03 with latest `nvidia-docker` support.
+#### Docker GPU Access
+Note that the purpose of the argument `--gpus all` is to expose GPU devices to the docker container, and it requires `docker` version >= 19.03 with latest `nvidia-docker` support.
 The two requirements could be installed following the instructions on the website:
 1. Docker CE (19.03): https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/
 2. nvidia-docker: https://github.com/NVIDIA/nvidia-docker
 
 For docker with old version, either updating it to docker 19.03 or using command `--runtime=nvidia` instead of `--gpus all' should help.
 
-#### Feature Extraction for NLVR2 
-We take NLVR2 as an example to do feature extraction.
+#### An Example: Feature Extraction for NLVR2 
+We demonstrate how to extract Faster R-CNN features of NLVR2 images.
 
 - Please first following the instruction on [NLVR2 official github](https://github.com/lil-lab/nlvr/tree/master/nlvr2) to get the images.
+
+- Download the pre-trained Faster R-CNN model. Instead of using the default pre-trained model (trained with 10 to 100 boxes), we use the ['alternative pretrained model'](https://github.com/peteanderson80/bottom-up-attention#demo) which trained with 36 boxes. 
+```
+wget https://www.dropbox.com/s/bacig173qnxddvz/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1 -O data/nlvr2_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
+```
 
 - Run docker container with command:
 ```
 docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/lxrt_public/data/nlvr2_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
-Note: /path/to/nlvr2/images would contain subfolders `train`, `dev`, `test1` and `test2`.
-Note2: Both paths /path/to/nlvr2/images/ and /path/to/lxrt_public requires the absolute path.
+> Note0: If it says something about 'privilege', add `sudo` before the command.
+> Note1: If it says something about '--gpus all', it means that the GPU options are not correctly set. Please read [Docker GPU Access](#docker-gpu-access) for the instructions to allow GPU access.
+> Note2: /path/to/nlvr2/images would contain subfolders `train`, `dev`, `test1` and `test2`.
+> Note3: Both paths '/path/to/nlvr2/images/' and '/path/to/lxrt_public' requires absolute paths.
 
-- Extract the features **inside the docker container**.
+
+- Extract the features **inside the docker container**. The extraction script is copied from 
 ```
 cd /workspace/features
-CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split train
+CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split train 
 CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split valid
 CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split test
 ```
-- It would takes around 5~6 hours for the training split and 1~2 hours for the valid and test splits. Since it is slow, I recommend to run them parallelly if there are multiple GPUs. It could be achived by changing the `gpu_id` in `CUDA_VISIBLE_DEVICES=$gpu_id`.
+
+- It would takes around 5 to 6 hours for the training split and 1 to 2 hours for the valid and test splits. Since it is slow, I recommend to run them parallelly if there are multiple GPUs. It could be achived by changing the `gpu_id` in `CUDA_VISIBLE_DEVICES=$gpu_id`.
 
 - The features would be saved in `train.tsv`, `valid.tsv`, and `test.tsv` under dir `data/nlvr2_imgfeat` outside the docker container. I have verified the extracted image features are the same to the one I provided in [NLVR2 fine-tuning](#nlvr2).
 
@@ -500,9 +534,12 @@ We thank the funding support from ARO-YIP Award #W911NF-18-1-0336, & awards from
 We thank [Peter Anderson](https://panderson.me/) for providing the faster R-CNN code and pre-trained models under
 [Bottom-Up-Attention Github Repo](https://github.com/peteanderson80/bottom-up-attention).
 
-
 We thank [hugginface](https://github.com/huggingface) for releasing the excellent PyTorch code 
 [PyTorch Transformers](https://github.com/huggingface/pytorch-transformers).
+
+We thank [Hengyuan Hu](https://www.linkedin.com/in/hengyuan-hu-8963b313b) for his [PyTorch VQA](https://github.com/hengyuan-hu/bottom-up-attention-vqa) implementation, our local VQA evaluator borrows the idea from this repo.
+
+We thank [Alane Suhr](http://alanesuhr.com/) for helping test LXMERT on NLVR2 unreleased test split.
 
 We thank all the authors and annotators of vision-and-language datasets 
 (i.e., 
@@ -514,7 +551,7 @@ We thank all the authors and annotators of vision-and-language datasets
 ), 
 which allows us to develop a pre-trained model for vision-and-language tasks.
 
-We thank [Alane Suhr](http://alanesuhr.com/) for helping test LXMERT on NLVR2 unreleased test split.
+We thank [Jie Lei](http://www.cs.unc.edu/~jielei/) and [Licheng Yu](http://www.cs.unc.edu/~licheng/) for their helpful discussions. I also want to thank [Shaoqing Ren](https://www.shaoqingren.com/) to teach me vision knowledge when I was in MSRA.
 
 We also thank you to look into our code. Please kindly contact us if you find any issue. Comments are always welcome.
 
