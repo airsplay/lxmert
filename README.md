@@ -480,19 +480,16 @@ If you find this project helps, please cite our paper :)
 ```
 
 ## Acknowledgement
+We thank the funding support from ARO-YIP Award #W911NF-18-1-0336, & awards from Google, Facebook, Salesforce, and Adobe.
 
-Thanks to [Peter Anderson](https://panderson.me/) for providing the faster R-CNN code and pre-trained models under
+We thank [Peter Anderson](https://panderson.me/) for providing the faster R-CNN code and pre-trained models under
 [Bottom-Up-Attention Github Repo](https://github.com/peteanderson80/bottom-up-attention).
 
 
-Thanks to [hugginface](https://github.com/huggingface) for releasing the excellent PyTorch code 
+We thank [hugginface](https://github.com/huggingface) for releasing the excellent PyTorch code 
 [PyTorch Transformers](https://github.com/huggingface/pytorch-transformers).
 
-Thanks to Franck Dernoncourt, Zhe Lin, and Trung Bui from 
-[Adobe Research](https://research.adobe.com/)
-for their helpful discussions.
-
-Thanks to all the authors and annotators of vision-and-language datasets 
+We thank all the authors and annotators of vision-and-language datasets 
 (i.e., 
 MS COCO, 
 Visual Genome,
@@ -502,6 +499,6 @@ NLVR2
 ), 
 which allows us to develop a pre-trained model for vision-and-language tasks.
 
-Thanks to [Alane Suhr](http://alanesuhr.com/) for helping test LXMERT on NLVR2 unreleased test split.
+We thank [Alane Suhr](http://alanesuhr.com/) for helping test LXMERT on NLVR2 unreleased test split.
 
 LXRThanks.
