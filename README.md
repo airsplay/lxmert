@@ -12,8 +12,8 @@ The accuracy achieved by LXMERT with this code base:
 
 | Split            | [VQA](https://visualqa.org/)     | [GQA](https://cs.stanford.edu/people/dorarad/gqa/)     | [NLVR2](http://lil.nlp.cornell.edu/nlvr/)  |
 |-----------       |:----:   |:---:    |:------:|
-| local validation | 69.90%  | 59.80%  | 74.10% |
-| test-dev         | 72.42%  | 60.00%  | 74.50% (test-P) |
+| local validation | 69.90%  | 59.80%  | 74.95% |
+| test-dev         | 72.42%  | 60.00%  | 74.45% (test-P) |
 | test-standard    | 72.54%  | 60.33%  | 76.18% (test-U) |
 
 All the results in the table are produced exactly with this code base.
@@ -21,6 +21,8 @@ Since [VQA](https://evalai.cloudcv.org/web/challenges/challenge-page/163/overvie
 we use our remaining submission entry from [VQA](https://visualqa.org/challenge.html)/[GQA](https://cs.stanford.edu/people/dorarad/gqa/challenge.html) challenges 2019 to get these results.
 For [NLVR2](http://lil.nlp.cornell.edu/nlvr/), we only test once on the unpublished test set (test-U).
 
+**Note that the NLVR2 validation result is slightly different from our paper (74.95% vs 74.5%). The 74.50 result comes from our old weight. 
+Althought the code and random seeds are all the same, PyTorch GPU execution is non-determistic which leads to this difference. And thus in [fine-tuning](#fine-tune-on-vision-and-language-tasks), we provide the range of results in multiple runs.**
 
 
 ## Pre-trained models
@@ -50,6 +52,18 @@ We fine-tune our LXMERT pre-trained model on each task with following hyper-para
 
 Although the fine-tuning processes are almost the same except for different hyper-parameters,
 we provide descriptions for each dataset to take care of all details.
+
+### General 
+The code requires **Python 3** and please install the python libs with command:
+```
+pip install -r requirements.txt
+```
+
+By the way, a python3 virtural environments could be set up and run by:
+```
+virtualenv name_of_environment -p python3
+source name_of_environment/bin/activate
+```
 ### VQA
 #### Fine-tuning
 * Please make sure the LXMERT pre-trained model is either [downloaded](#pre-trained-models) or [pre-trained](#pre-training).
@@ -333,18 +347,23 @@ bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 python src/pretrain/lxmert_pretrain_new.py \
     # The pre-training tasks
     --taskMaskLM --taskObjPredict --taskMatched --taskQA \  
+    
     # Vision subtasks
     # obj / attr: detected object/attribute label prediction.
     # feat: RoI feature regression.
-    --visualLosses obj,attr,feat \
+   	 --visualLosses obj,attr,feat \
+    
     # Mask rate for words and objects
     --wordMaskRate 0.15 --objMaskRate 0.15 \
+    
     # Training and validation sets
     # mscoco_nominival + mscoco_minival = mscoco_val2014
     # visual genome - mscoco = vgnococo
     --train mscoco_train,mscoco_nominival,vgnococo --valid mscoco_minival \
+    
     # Number of layers in each encoder
     --llayers 9 --xlayers 5 --rlayers 5 \
+    
     # Train from scratch (Using intialized weights) instead of loading BERT weights.
     --fromScratch \
     # Hyper parameters
