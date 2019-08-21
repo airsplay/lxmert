@@ -419,15 +419,15 @@ Please follow the `README.txt` under `baidu_drive/vg_gqa_imgfeat` and
 
 
 ## Code and Project Explanation
-* All code is in folder `src`. The basic `lxrt` .
+- All code is in folder `src`. The basic `lxrt` .
 The python files related to pre-training and fine-tuning are saved in `src/pretrain` and `src/tasks` respectively.
-* I kept folders containing image features (e.g., mscoco_imgfeat) separated from vision-and-language dataset (e.g., vqa, lxmert) because
+- I kept folders containing image features (e.g., mscoco_imgfeat) separated from vision-and-language dataset (e.g., vqa, lxmert) because
 multiple vision-and-language datasets would share common images.
-* We use the name `lxmert` and use the name `lxrt`
-(Language, Cross-Modality, and object-Relationship Transformers) to indicate our models.
-* Similar to `lxrt` ((Language, Cross-Modality, and object-Relationship Transformers), 
+- We use the name `lxmert` for our framework and use the name `lxrt`
+(Language, Cross-Modality, and object-Relationship Transformers) to refer to our our models.
+- Similar to `lxrt` ((Language, Cross-Modality, and object-Relationship Transformers), 
 we use `lxr???` to annotate the number of layers in each components.
-E.g., `lxr955` as in this code base indicates 
+E.g., `lxr955` (as in this code base) refers to 
 a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationship layers.
 
 ## Faster R-CNN Feature Extraction
