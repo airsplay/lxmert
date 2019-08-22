@@ -21,8 +21,8 @@ Since [VQA](https://evalai.cloudcv.org/web/challenges/challenge-page/163/overvie
 we use our remaining submission entry from [VQA](https://visualqa.org/challenge.html)/[GQA](https://cs.stanford.edu/people/dorarad/gqa/challenge.html) challenges 2019 to get these results.
 For [NLVR2](http://lil.nlp.cornell.edu/nlvr/), we only test once on the unpublished test set (test-U).
 
-**Note that the NLVR2 validation result is slightly different from our paper (74.95% vs 74.5%). The 74.50 result comes from our old weight. 
-Althought the code and random seeds are all the same, PyTorch GPU execution is non-determistic which leads to this difference. And thus in [fine-tuning](#fine-tune-on-vision-and-language-tasks), we provide the range of results in multiple runs.**
+We use this code (with model ensemble) to participate in [VQA](https://visualqa.org/roe.html) 2019 and [GQA](https://drive.google.com/open?id=1CtFk0ldbN5w2qhwvfKrNzAFEj-I9Tjgy) 2019 challenge this May.
+We are the **only** team ranking **top-3** in both challenges.
 
 
 ## Pre-trained models
@@ -483,11 +483,12 @@ a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationsh
 
 
 We use the Faster R-CNN feature extractor demonstrated in ["Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering", CVPR 2018](https://arxiv.org/abs/1707.07998)
-and its code released at [bottom-up-attention github repo](https://github.com/peteanderson80/bottom-up-attention).
+and its released code in [bottom-up-attention github repo](https://github.com/peteanderson80/bottom-up-attention).
 It was trained on [Visual Genome](https://visualgenome.org/) dataset and implemented based on a specific [Caffe](https://caffe.berkeleyvision.org/) version.
-To extract object features, you could follow the installation instructions in the bottom-up attention github [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention). 
 
-We also provide a docker image which takes care of all these dependencies.
+
+To extract object features with Faster R-CNN, I recommend to use our docker image `airsplay/bottom-up-attention` on docker hub. I take care of all the dependencies there. Instructions and examples are demonstrated below. You could also follow the installation instructions in the bottom-up attention github to setup the tool: [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention). 
+
 
 ### Feature Extraction with Docker
 [Docker](https://www.docker.com/) is a easy-to-use virturlization tool which allows you to plug and play without installing libraries.
@@ -535,7 +536,7 @@ docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/
 > Note3: Both paths '/path/to/nlvr2/images/' and '/path/to/lxrt_public' requires absolute paths.
 
 
-- Extract the features **inside the docker container**. The extraction script is copied from 
+- Extract the features **inside the docker container**. The extraction script is copied from [butd/tools/generate_tsv.py](https://github.com/peteanderson80/bottom-up-attention/blob/master/tools/generate_tsv.py) and modified by [Jie Lei](http://www.cs.unc.edu/~jielei/) and me.
 ```
 cd /workspace/features
 CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split train 
@@ -546,6 +547,32 @@ CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split test
 - It would takes around 5 to 6 hours for the training split and 1 to 2 hours for the valid and test splits. Since it is slow, I recommend to run them parallelly if there are multiple GPUs. It could be achived by changing the `gpu_id` in `CUDA_VISIBLE_DEVICES=$gpu_id`.
 
 - The features would be saved in `train.tsv`, `valid.tsv`, and `test.tsv` under dir `data/nlvr2_imgfeat` outside the docker container. I have verified the extracted image features are the same to the one I provided in [NLVR2 fine-tuning](#nlvr2).
+
+#### Yet Another Example: Feature Extraction for MS COCO
+- Download the MS COCO train2014, val2014, and test2015 images from [MS COCO official website](http://cocodataset.org/#download).
+
+- Download the pre-trained Faster R-CNN weights. 
+```
+mkdir -p data/mscoco_imgfeat
+wget https://www.dropbox.com/s/bacig173qnxddvz/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1 -O data/mscoco_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
+```
+
+- Run docker container with command:
+```
+docker run --gpus all -v /path/to/mscoco/images:/workspace/images:ro -v $(pwd)/data/mscoco_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
+```
+> Note: Option `-v` mounts the folders outside container to the paths inside the container.
+> Note1: Please use the **absolute path** to the ms coco images folder `images`. The `images` folder containing the `train2014`, `val2014`, and `test2015` sub-folders. (It's a standard way to save MS COCO images.)
+
+- Extract the features **inside the docker container**.
+```
+cd /workspace/features
+CUDA_VISIBLE_DEVICES=0 python extract_coco_image.py --split train 
+CUDA_VISIBLE_DEVICES=0 python extract_coco_image.py --split valid
+CUDA_VISIBLE_DEVICES=0 python extract_coco_image.py --split test
+```
+ 
+- Exit from the docker container (by executing `exit` command in bash); The extracted features would be saved under folder `LXMERT_ROOT/data/mscoco_imgfeat`. 
 
 
 ## Reference
