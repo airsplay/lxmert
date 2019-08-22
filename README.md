@@ -240,9 +240,9 @@ The images could either be downloaded with the urls or by signing an agreement f
 ```
 mkdir -p data/nlvr2_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/train_obj36.zip -P data/nlvr2_imgfeat
-unzip data/nlvr2_imgfeat/train_obj36.zip -d data/nlvr2_imgfeat && rm data/nlvr2_imgfeat/train_obj36.zip
+unzip data/nlvr2_imgfeat/train_obj36.zip -d data && rm data/nlvr2_imgfeat/train_obj36.zip
 wget nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/valid_obj36.zip -P data/nlvr2_imgfeat
-unzip data/nlvr2_imgfeat/valid_obj36.zip -d data/nlvr2_imgfeat && rm data/nlvr2_imgfeat/valid_obj36.zip
+unzip data/nlvr2_imgfeat/valid_obj36.zip -d data && rm data/nlvr2_imgfeat/valid_obj36.zip
 ```
 
 - Before fine-tuning on whole NLVR2 training set, verifying the script and model on a small training set (512 images) is recommended. 
