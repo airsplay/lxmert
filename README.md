@@ -189,7 +189,7 @@ submitted testdev result.
 The reason is that the test server takes an [advanced 
 evaluation system](https://cs.stanford.edu/people/dorarad/gqa/evaluate.html) while our local evaluator only 
 calculates the exact matching.
-Please use [this official evaluator](https://nlp.stanford.edu/data/gqa/eval.zip) if you 
+Please use [this official evaluator](https://nlp.stanford.edu/data/gqa/eval.zip) (784 MB) if you 
 want to have the exact number without submitting.
 
 
