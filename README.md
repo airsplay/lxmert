@@ -488,17 +488,20 @@ It was trained on [Visual Genome](https://visualgenome.org/) dataset and impleme
 To extract object features, you could follow the installation instructions in the bottom-up attention github [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention). 
 
 We also provide a docker image which takes care of all these dependencies.
+
 ### Feature Extraction with Docker
-The built docker file is released at docker hub and could be pulled with command:
+[Docker](https://www.docker.com/) is a easy-to-use virturlization tool which allows you to plug and play without installing libraries.
+
+The built docker file for bottom-up-attention is released on [docker hub](https://hub.docker.com/r/airsplay/bottom-up-attention) and could be downloaded with command:
 ```
 sudo docker pull airsplay/bottom-up-attention
 ```
-After pulling the docker, you could run docker container:
+After pulling the docker, you could test running the docker container with command:
 ```
-docker run --gpus all -v /path/to/images:/workspace/images:ro -v /path/to/imgfeat_folder
-feat:/workspace/features --rm -it airsplay/bottom-up-attention bash
-```
-`-v` mounts the folders on host os to the docker image container. 
+docker run --gpus all --rm -it airsplay/bottom-up-attention bash
+``` 
+
+If erros about `--gpus all` popped up, please read the next section.
 
 #### Docker GPU Access
 Note that the purpose of the argument `--gpus all` is to expose GPU devices to the docker container, and it requires `docker` version >= 19.03 with latest `nvidia-docker` support.
@@ -522,6 +525,7 @@ wget https://www.dropbox.com/s/bacig173qnxddvz/resnet101_faster_rcnn_final_iter_
 ```
 docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/lxrt_public/data/nlvr2_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
+`-v` mounts the folders on host os to the docker image container.
 > Note0: If it says something about 'privilege', add `sudo` before the command.
 >
 > Note1: If it says something about '--gpus all', it means that the GPU options are not correctly set. Please read [Docker GPU Access](#docker-gpu-access) for the instructions to allow GPU access.
