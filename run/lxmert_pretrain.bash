@@ -9,7 +9,7 @@ cp $0 $output/run.bash
 
 # Pre-training
 CUDA_VISIBLE_DEVICES=$1 PYTHONPATH=$PYTHONPATH:./src \
-    python src/pretrain/lxmert_pretrain_new.py \
+    python src/pretrain/lxmert_pretrain.py \
     --taskMaskLM --taskObjPredict --taskMatched --taskQA \
     --visualLosses obj,attr,feat \
     --wordMaskRate 0.15 --objMaskRate 0.15 \

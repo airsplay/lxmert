@@ -316,7 +316,7 @@ wget nlp.cs.unc.edu/data/lxmert_data/lxmert/vgnococo.json -P data/lxmert/
 wget nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_minival.json -P data/lxmert/
 ```
 
-- *Skip this if you have run [VQA fine-tuning](#vqa).* Download the detection features for MS COCO images.
+- [*Skip this if you have run [VQA fine-tuning](#vqa).*] Download the detection features for MS COCO images.
 ```
 mkdir -p data/mscoco_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
@@ -325,7 +325,7 @@ wget nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/val2014_obj36.zip -P data/ms
 unzip data/mscoco_imgfeat/val2014_obj36.zip -d data && rm data/mscoco_imgfeat/val2014_obj36.zip
 ```
 
-- *Skip this if you have run [GQA fine-tuning](#gqa).* Download the detection features for Visual Genome images.
+- [*Skip this if you have run [GQA fine-tuning](#gqa).*] Download the detection features for Visual Genome images.
 ```
 mkdir -p data/vg_gqa_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
@@ -337,10 +337,13 @@ unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 ```
 
-- Run on the whole MS COCO + Visual Genome datasets. Here, we take a simple one-step pre-training strategy rather than the two-steps (10 epochs without image QA and 10 epochs with image QA) methods describe in our paper. We re-run the pre-training and did not find much difference with these two strategies.
+- Run on the whole MS COCO + Visual Genome related datasets. Here, we take a simple one-step pre-training strategy rather than the two-steps (10 epochs without image QA and 10 epochs with image QA) methods described in our paper.
+We re-run the pre-training and did not find much difference with these two strategies.
 ```
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 ```
+> Note on using multiple GPU: Argument `0,1,2,3` indiciates using all 4 GPUs on the server. If you do not have 4 GPU (I am sorry to hear that), please consider halving the batch-size or using the Apex to support half-precison. 
+We use the default pytorch data-parallel and the main thread would take charge of the data loading. On 4 GPUs, we do not find the data loading effect the result a lot (5% overhead). However, it might become a bottleneck when more GPU's are involved.
 
 - Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
 ```
