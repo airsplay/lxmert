@@ -337,13 +337,15 @@ unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 ```
 
-- Run on the whole MS COCO + Visual Genome related datasets. Here, we take a simple one-step pre-training strategy rather than the two-steps (10 epochs without image QA and 10 epochs with image QA) methods described in our paper.
-We re-run the pre-training and did not find much difference with these two strategies.
+- Run on the whole [MS COCO](http://cocodataset.org) + [Visual Genome](https://visualgenome.org/) related datasets (i.e., [VQA](https://visualqa.org/), [GQA](https://cs.stanford.edu/people/dorarad/gqa/index.html), [COCO caption](http://cocodataset.org/#captions-2015), [VG Caption](https://visualgenome.org/), [VG QA](https://github.com/yukezhu/visual7w-toolkit)). 
+Here, we take a simple one-step pre-training strategy rather than the two-steps strategy (10 epochs without image QA and 10 epochs with image QA) described in our paper.
+We re-run the pre-training with current setup (12 epochs with all pre-training tasks) and did not find much difference between these two strategies. The pre-training finishes in **7 days** on **4 GPUs**. 
 ```
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 ```
-> Note on using multiple GPU: Argument `0,1,2,3` indiciates using all 4 GPUs on the server. If you do not have 4 GPU (I am sorry to hear that), please consider halving the batch-size or using the Apex to support half-precison. 
-We use the default pytorch data-parallel and the main thread would take charge of the data loading. On 4 GPUs, we do not find the data loading effect the result a lot (5% overhead). However, it might become a bottleneck when more GPU's are involved.
+> Note on using multiple GPUs: Argument `0,1,2,3` indiciates taking first 4 GPUs to pre-train LXMERT. If the server does not have 4 GPUs (I am sorry to hear that), please consider halving the batch-size or using the [NVIDIA/apex](https://github.com/NVIDIA/apex) library to support half-precison computation. 
+The scripts uses the default data parallelism in PyTorch and thus extensible to less/more GPUs. The python main thread would take charge of the data loading. On 4 GPUs, we do not find that the data loading effects the speed a lot (around 5% overhead). However, it might become a bottleneck when more GPU's are involved thus please consider parallelizing the loading process as well.
+> Note on GPU models: We find that either Titan XP, GTX 2080, and Titan V could support this pre-training. However, GTX 1080, with its 11G memory, is a little bit small thus please change the batch_size to 224 (instead of 256).
 
 - Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
 ```
@@ -486,11 +488,13 @@ a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationsh
 
 
 We use the Faster R-CNN feature extractor demonstrated in ["Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering", CVPR 2018](https://arxiv.org/abs/1707.07998)
-and its released code in [bottom-up-attention github repo](https://github.com/peteanderson80/bottom-up-attention).
+and its released code at [Bottom-Up-Attention github repo](https://github.com/peteanderson80/bottom-up-attention).
 It was trained on [Visual Genome](https://visualgenome.org/) dataset and implemented based on a specific [Caffe](https://caffe.berkeleyvision.org/) version.
 
 
-To extract object features with Faster R-CNN, I recommend to use our docker image `airsplay/bottom-up-attention` on docker hub. I take care of all the dependencies there. Instructions and examples are demonstrated below. You could also follow the installation instructions in the bottom-up attention github to setup the tool: [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention). 
+To extract features with this Caffe Faster R-CNN, we publicly release a docker image `airsplay/bottom-up-attention` on docker hub that takes care of all the dependencies and library installation . Instructions and examples are demonstrated below. You could also follow the installation instructions in the bottom-up attention github to setup the tool: [https://github.com/peteanderson80/bottom-up-attention](https://github.com/peteanderson80/bottom-up-attention). 
+
+The BUTD feature extractor is widely used in many other projects. If you want to reproduce the results from their paper, feel free to use our docker as a tool.
 
 
 ### Feature Extraction with Docker
@@ -551,7 +555,7 @@ CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split test
 
 - The features would be saved in `train.tsv`, `valid.tsv`, and `test.tsv` under dir `data/nlvr2_imgfeat` outside the docker container. I have verified the extracted image features are the same to the one I provided in [NLVR2 fine-tuning](#nlvr2).
 
-#### Yet Another Example: Feature Extraction for MS COCO
+#### Yet Another Example: Feature Extraction for MS COCO Images
 - Download the MS COCO train2014, val2014, and test2015 images from [MS COCO official website](http://cocodataset.org/#download).
 
 - Download the pre-trained Faster R-CNN weights. 

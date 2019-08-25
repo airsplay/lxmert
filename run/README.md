@@ -1,41 +1,43 @@
-# Running Arguments
+# Running Script Arguments
 
-## Splits
 ```
---train X: using split X in training 
---valid X: using split X in validation
---test X: using split X in testing
-```
-
-## Model
-```
---llayers X: Using X (a number) layers in language encoder.
---xlayers X: Using X (a number) layers in cross-modality encoder.
---rlayers X: Using X (a number) layers in object relationship encoder.
-```
-
-## Load
-```
---load X: load fine-tuned model X.
---loadLXMERT X: load pre-trained model without answer heads.
---loadLXMERTQA X: load pre-trained model with answer heads.
-```
-
-## Hyper parameters
-```
---batchSize X: Batch size
---optim X: Optimizers.
---lr X: peak learning rate
---epochs X: train for X epochs
+Data Splits: 
+    --train [str,str,...]: use the splits (separated by comma) in training.
+    --valid [str,str,...]: use the splits (separated by comma) in validation.
+    --test [str,str,...]: use the splits (separated by comma) in testing.
+Model Architecture:
+    --llayers [int]: number of layers in language encoder.
+    --xlayers [int]: number of layers in cross-modality encoder.
+    --rlayers [int]: number of layers in object relationship encoder.
+Load Weights:
+    --load path/to/saved_model: load fine-tuned model path/to/saved_model.pth.
+    --loadLXMERT path/to/saved_model: load pre-trained model without answer heads from path/to/saved_model_LXRT.pth.
+    --loadLXMERTQA path/to/saved_model: load pre-trained model with answer head path/to/saved_model_LXRT.pth.
+Training Hyper Parameters
+    --batchSize [int]: batch size.
+    --optim [str]: optimizers.
+    --lr [float]: peak learning rate.
+    --epochs [int]: training epochs.
 ```
 
-#Pre-training Arguments
-## Pre-training tasks:
+# Pre-training-Specific Arguments
 ```
---taskMaskLM: use the masked language model task.
---taskObjPredict: use the masked object prediction task.
---taskMatched: use the cross-modality matched task.
---taskQA: use the image QA task.
+Pre-training Tasks:
+    --taskMaskLM: use the masked language model task.
+    --taskObjPredict: use the masked object prediction task.
+    --taskMatched: use the cross-modality matched task.
+    --taskQA: use the image QA task.
+Visual Pre-training Losses (Tasks):
+    --visualLosses [str,str,...]: The sub-tasks in pre-training visual modality. Each one is from 'obj,attr,feat'. 
+      obj: detected-object-label classification. 
+      attr: detected-object-attribute classification. 
+      feat: RoI-feature regression.
+Mask Rate in Pre-training:
+    --wordMaskRate [float]: The prob of masking a word.
+    --objMaskRate [float]: The prob of masking an object.
+Initialization:
+    --fromScratch: The default mode would train with loaded BERT weights. 
+      As we promised to the EMNLP reviewer, the model would re-initialized with this one-line argument.
 ```
 
 
