@@ -51,15 +51,14 @@ def load_json(file_path):
 
 
 def load_image_ids(img_root, split_dir):
-    """images in the same directory are in the same sequential region,
-    but with no internal ordering"""
+    """images in the same directory are in the same split"""
     pathXid = []
     img_root = os.path.join(img_root, split_dir)
     for name in os.listdir(img_root):
         idx = name.split(".")[0]
         pathXid.append(
                 (
-                    os.path.join(IMG_ROOT, name),
+                    os.path.join(img_root, name),
                     idx))
     return pathXid
 

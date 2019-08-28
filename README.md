@@ -307,7 +307,7 @@ bash run/vqa_finetune.bash 0 --fast
 
 ## Pre-training
 
-- Download the our aggregated LXMERT dataset (around 700MB in total)
+- Download our aggregated LXMERT dataset from MS COCO, Visual Genome, VQA, and GQA (around 700MB in total). The answer labels are saved in `data/lxmert/all_ans.json`.
 ```
 mkdir -p data/lxmert
 wget nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_train.json -P data/lxmert/
@@ -345,6 +345,7 @@ bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 ```
 > Note on using multiple GPUs: Argument `0,1,2,3` indiciates taking first 4 GPUs to pre-train LXMERT. If the server does not have 4 GPUs (I am sorry to hear that), please consider halving the batch-size or using the [NVIDIA/apex](https://github.com/NVIDIA/apex) library to support half-precison computation. 
 The scripts uses the default data parallelism in PyTorch and thus extensible to less/more GPUs. The python main thread would take charge of the data loading. On 4 GPUs, we do not find that the data loading effects the speed a lot (around 5% overhead). However, it might become a bottleneck when more GPU's are involved thus please consider parallelizing the loading process as well.
+>
 > Note on GPU models: We find that either Titan XP, GTX 2080, and Titan V could support this pre-training. However, GTX 1080, with its 11G memory, is a little bit small thus please change the batch_size to 224 (instead of 256).
 
 - Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
@@ -356,7 +357,7 @@ python src/pretrain/lxmert_pretrain_new.py \
     # Vision subtasks
     # obj / attr: detected object/attribute label prediction.
     # feat: RoI feature regression.
-   	 --visualLosses obj,attr,feat \
+    --visualLosses obj,attr,feat \
     
     # Mask rate for words and objects
     --wordMaskRate 0.15 --objMaskRate 0.15 \
@@ -569,6 +570,7 @@ wget https://www.dropbox.com/s/bacig173qnxddvz/resnet101_faster_rcnn_final_iter_
 docker run --gpus all -v /path/to/mscoco/images:/workspace/images:ro -v $(pwd)/data/mscoco_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
 > Note: Option `-v` mounts the folders outside container to the paths inside the container.
+> 
 > Note1: Please use the **absolute path** to the ms coco images folder `images`. The `images` folder containing the `train2014`, `val2014`, and `test2015` sub-folders. (It's a standard way to save MS COCO images.)
 
 - Extract the features **inside the docker container**.
