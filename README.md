@@ -339,10 +339,12 @@ bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 
 - Run on the whole [MS COCO](http://cocodataset.org) + [Visual Genome](https://visualgenome.org/) related datasets (i.e., [VQA](https://visualqa.org/), [GQA](https://cs.stanford.edu/people/dorarad/gqa/index.html), [COCO caption](http://cocodataset.org/#captions-2015), [VG Caption](https://visualgenome.org/), [VG QA](https://github.com/yukezhu/visual7w-toolkit)). 
 Here, we take a simple one-step pre-training strategy rather than the two-steps strategy (10 epochs without image QA and 10 epochs with image QA) described in our paper.
-We re-run the pre-training with current setup (12 epochs with all pre-training tasks) and did not find much difference between these two strategies. The pre-training finishes in **7 days** on **4 GPUs**. 
+We re-run the pre-training with current setup (12 epochs with all pre-training tasks) and did not find much difference between these two strategies. 
+The pre-training finishes in **7 days** on **4 GPUs**. 
 ```
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 ```
+**I have tested this script before. However, in case I missed anything, please fine-tune with the weights saved in `pretrain/lxmert` when the pre-training goes (I saved the weights in `EpochXX_LXRT.pth` at the end of each epoch).  If the results do not keep growing, it means that the pre-training fails and please let me know!  **
 > Note on using multiple GPUs: Argument `0,1,2,3` indiciates taking first 4 GPUs to pre-train LXMERT. If the server does not have 4 GPUs (I am sorry to hear that), please consider halving the batch-size or using the [NVIDIA/apex](https://github.com/NVIDIA/apex) library to support half-precison computation. 
 The scripts uses the default data parallelism in PyTorch and thus extensible to less/more GPUs. The python main thread would take charge of the data loading. On 4 GPUs, we do not find that the data loading effects the speed a lot (around 5% overhead). However, it might become a bottleneck when more GPU's are involved thus please consider parallelizing the loading process as well.
 >
