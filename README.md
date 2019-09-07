@@ -1,7 +1,7 @@
 # LXMERT: Learning Cross-Modality Encoder Representations from Transformers
 
 ## Introduction
-PyTorch code for our EMNLP 2019 paper ["LXMERT: Learning Cross-Modality Encoder Representations from Transformers"](https://arxiv.org/abs/1908.07490).
+PyTorch code for EMNLP 2019 paper ["LXMERT: Learning Cross-Modality Encoder Representations from Transformers"](https://arxiv.org/abs/1908.07490).
 
 
 
@@ -21,7 +21,7 @@ Since [VQA](https://evalai.cloudcv.org/web/challenges/challenge-page/163/overvie
 we use our remaining submission entry from [VQA](https://visualqa.org/challenge.html)/[GQA](https://cs.stanford.edu/people/dorarad/gqa/challenge.html) challenges 2019 to get these results.
 For [NLVR2](http://lil.nlp.cornell.edu/nlvr/), we only test once on the unpublished test set (test-U).
 
-We use this code (with model ensemble) to participate in [VQA](https://visualqa.org/roe.html) 2019 and [GQA](https://drive.google.com/open?id=1CtFk0ldbN5w2qhwvfKrNzAFEj-I9Tjgy) 2019 challenge this May.
+We use this code (with model ensemble) to participate in [VQA 2019](https://visualqa.org/roe.html) and [GQA 2019](https://drive.google.com/open?id=1CtFk0ldbN5w2qhwvfKrNzAFEj-I9Tjgy) challenge this May.
 We are the **only** team ranking **top-3** in both challenges.
 
 
@@ -33,11 +33,11 @@ wget http://nlp.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
 ```
 
 
-If the downloading speed is slow, the pre-trained model could also be downloaded from [other sources](#alternative-dataset-and-features-download-links), 
-and please place it at `snap/pretrained/model_LXRT.pth`.
+If download speed is slower than expected, the pre-trained model could also be downloaded from [other sources](#alternative-dataset-and-features-download-links).
+Please help put the downloaded file at `snap/pretrained/model_LXRT.pth`.
 
-We also provide the instructions to pre-train the model in [pre-training](#pre-training).
-It needs 4 GPUs and takes around a week.
+We also provide data and commands to pre-train the model in [pre-training](#pre-training).
+The default setup needs 4 GPUs and takes around a week to finish.
 
 
 
@@ -374,6 +374,7 @@ python src/pretrain/lxmert_pretrain_new.py \
     
     # Train from scratch (Using intialized weights) instead of loading BERT weights.
     --fromScratch \
+
     # Hyper parameters
     --batchSize 256 --optim bert --lr 1e-4 --epochs 12 \
     --tqdm --output $output ${@:2}
@@ -482,10 +483,15 @@ The python files related to pre-training and fine-tuning are saved in `src/pretr
 multiple vision-and-language datasets would share common images.
 - We use the name `lxmert` for our framework and use the name `lxrt`
 (Language, Cross-Modality, and object-Relationship Transformers) to refer to our our models.
-- Similar to `lxrt` ((Language, Cross-Modality, and object-Relationship Transformers), 
-we use `lxr???` to annotate the number of layers in each components.
-E.g., `lxr955` (as in this code base) refers to 
-a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationship layers.
+- To be consistent with the name `lxrt` ((Language, Cross-Modality, and object-Relationship Transformers), 
+we use `lxrXXX` to denote the number of layers.
+E.g., `lxr955` (used in current pre-trained model) indicates 
+a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationship layers. 
+If we consider a single-modality layer as a half of cross-modality layer, 
+the total number of layer is `(9 + 5) / 2 + 5 = 12`, which is the same as `BERT_BASE`.
+- We share the weight between the two cross-modality attention sub-layers. Please check the `visual_attention` (here)[https://github.com/airsplay/lxmert/blob/c9fe5e78c8f15de922aab39ca35ebabf78705197/src/lxrt/modeling.py#L521], which is used to compute both `lang->visn` attention and `visn->lang` attention. (I am sorry that the name `visual_attention` is misleading because I deleted the `lang_attention` here.) Sharing weights is mostly used for saving computational resources and it also (intuitively) helps forcing the features from visn/lang into a joint subspace.
+- I want to say some more words about the box encoder. I do not normalize the coordinate from [0, 1] to [-1, 1] thus the input features would be always positive, which looks like a typo but actually not ;). Normalizing the coordinate would not affect the output of box encoder (mathematically and almost numerically). ~~(Hint: consider the LayerNorm in positional encoding)~~
+
 
 ## Faster R-CNN Feature Extraction
 
@@ -588,6 +594,7 @@ CUDA_VISIBLE_DEVICES=0 python extract_coco_image.py --split test
 
 ## Reference
 If you find this project helps, please cite our paper :)
+
 ```
 @inproceedings{tan2019lxmert,
   title={LXMERT: Learning Cross-Modality Encoder Representations from Transformers},

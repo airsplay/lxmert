@@ -19,8 +19,6 @@ import base64
 import numpy as np
 import cv2
 import csv
-import json
-import glob
 from tqdm import tqdm
 
 csv.field_size_limit(sys.maxsize)
@@ -32,15 +30,6 @@ FIELDNAMES = ["img_id", "img_h", "img_w", "objects_id", "objects_conf",
 # per image, set both values to 36.
 MIN_BOXES = 36
 MAX_BOXES = 36
-
-def save_json(data, file_path):
-    with open(file_path, "w") as f:
-        json.dump(data, f)
-
-
-def load_json(file_path):
-    with open(file_path, "r") as f:
-        return json.load(f)
 
 
 def load_image_ids(img_root):
