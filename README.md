@@ -340,7 +340,7 @@ bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 - Run on the whole [MS COCO](http://cocodataset.org) + [Visual Genome](https://visualgenome.org/) related datasets (i.e., [VQA](https://visualqa.org/), [GQA](https://cs.stanford.edu/people/dorarad/gqa/index.html), [COCO caption](http://cocodataset.org/#captions-2015), [VG Caption](https://visualgenome.org/), [VG QA](https://github.com/yukezhu/visual7w-toolkit)). 
 Here, we take a simple one-step pre-training strategy rather than the two-steps strategy (10 epochs without image QA and 10 epochs with image QA) described in our paper.
 We re-run the pre-training with current setup (12 epochs with all pre-training tasks) and did not find much difference between these two strategies. 
-The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that [my experience](../blob/master/experience_in_pretraining.md) in this project would help researchers with limited computational resources.
+The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that [my experience](../../blob/master/experience_in_pretraining.md) in this project would help researchers with limited computational resources.
 ```
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 ```
