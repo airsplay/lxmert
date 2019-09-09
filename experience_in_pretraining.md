@@ -1,6 +1,7 @@
+# Experience in Pre-training
 Since I finish this project with quite limited computational resources, I would like to share some experiences.  If you are also in a small group and plan to pre-train back-bone models for fun, hope it would help.
 
-# Workflow
+## Workflow
 1. Design a model and its pre-training strategies.
 2. Test whether the code is correct or not by over-fitting a super small split (5000 images, typically) of aggregated data.
 3. Pre-train it on **all aggregated pre-training data** for around 3 to 4 epochs. (At least make sure that all the images are included!)
@@ -10,7 +11,7 @@ Since I finish this project with quite limited computational resources, I would 
 7. Train on **full aggregated data** and have a good one-week sleep ;).
 
 
-# Tips
+## Tips
 - **Do not** verify pre-training strategies (pre-training tasks, pre-training model) on a **small split** of the data. The behavior of pre-training on a small split is significantly different from the full pre-training dataset. 
 - Do not over-tune the pre-training hyperparameters. Keep in mind that a good idea will overshadow all these cherry-pick hyper-parameters. Anyway, you would not have enough GPUs to do that.
 - Add a component at each time; Have a plan for it.
