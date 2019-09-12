@@ -489,8 +489,8 @@ E.g., `lxr955` (used in current pre-trained model) indicates
 a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationship layers. 
 If we consider a single-modality layer as a half of cross-modality layer, 
 the total number of layer is `(9 + 5) / 2 + 5 = 12`, which is the same as `BERT_BASE`.
-- We share the weight between the two cross-modality attention sub-layers. Please check the `visual_attention` (here)[https://github.com/airsplay/lxmert/blob/c9fe5e78c8f15de922aab39ca35ebabf78705197/src/lxrt/modeling.py#L521], which is used to compute both `lang->visn` attention and `visn->lang` attention. (I am sorry that the name `visual_attention` is misleading because I deleted the `lang_attention` here.) Sharing weights is mostly used for saving computational resources and it also (intuitively) helps forcing the features from visn/lang into a joint subspace.
-- I want to say some more words about the box encoder. I do not normalize the coordinate from [0, 1] to [-1, 1] thus the input features would be always positive, which looks like a typo but actually not ;). Normalizing the coordinate would not affect the output of box encoder (mathematically and almost numerically). ~~(Hint: consider the LayerNorm in positional encoding)~~
+- We share the weight between the two cross-modality attention sub-layers. Please check the `visual_attention` [here](https://github.com/airsplay/lxmert/blob/c9fe5e78c8f15de922aab39ca35ebabf78705197/src/lxrt/modeling.py#L521), which is used to compute both `lang->visn` attention and `visn->lang` attention. (I am sorry that the name `visual_attention` is misleading because I deleted the `lang_attention` here.) Sharing weights is mostly used for saving computational resources and it also (intuitively) helps forcing the features from visn/lang into a joint subspace.
+- The box coordinates are not normalized from [0, 1] to [-1, 1], which looks like a typo but actually not ;). Normalizing the coordinate would not affect the output of box encoder (mathematically and almost numerically). ~~(Hint: consider the LayerNorm in positional encoding)~~
 
 
 ## Faster R-CNN Feature Extraction
