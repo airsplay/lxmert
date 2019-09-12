@@ -10,14 +10,20 @@ Model Architecture:
     --xlayers [int]: number of layers in cross-modality encoder.
     --rlayers [int]: number of layers in object relationship encoder.
 Load Weights:
-    --load path/to/saved_model: load fine-tuned model path/to/saved_model.pth.
-    --loadLXMERT path/to/saved_model: load pre-trained model without answer heads from path/to/saved_model_LXRT.pth.
-    --loadLXMERTQA path/to/saved_model: load pre-trained model with answer head path/to/saved_model_LXRT.pth.
-Training Hyper Parameters
+    --load [str='path/to/saved_model']: load fine-tuned model path/to/saved_model.pth.
+    --loadLXMERT [str='path/to/saved_model']: load pre-trained model without answer heads from path/to/saved_model_LXRT.pth.
+    --loadLXMERTQA [str='path/to/saved_model']: load pre-trained model with answer head path/to/saved_model_LXRT.pth.
+    --fromScratch: If none of the above loading parameters are set, the default mode would 
+      load the pre-trained BERT weights.
+      As we promised to EMNLP reviewers, the language encoder would be re-initialized with this one-line argument to test the performance without BERT weights.
+Training Hyper Parameters:
     --batchSize [int]: batch size.
     --optim [str]: optimizers.
     --lr [float]: peak learning rate.
     --epochs [int]: training epochs.
+Debugging:
+    --tiny: Load 512 images for each data split. (Note: number of images might be changed due to dataset specification)
+    --fast: Load 5000 images for each data split. (Note: number of images might be changed due to dataset specification)
 ```
 
 # Pre-training-Specific Arguments
@@ -36,8 +42,8 @@ Mask Rate in Pre-training:
     --wordMaskRate [float]: The prob of masking a word.
     --objMaskRate [float]: The prob of masking an object.
 Initialization:
-    --fromScratch: The default mode would train with loaded BERT weights. 
-      As we promised to the EMNLP reviewer, the model would re-initialized with this one-line argument.
+    --fromScratch: The default mode would load the pre-trained BERT weights into the model. 
+      As we promised to EMNLP reviewers, this option would re-initialize the language encoder.
 ```
 
 
