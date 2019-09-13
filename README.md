@@ -7,17 +7,14 @@ PyTorch code for EMNLP 2019 paper ["LXMERT: Learning Cross-Modality Encoder Repr
 
 ## Results (with this Github version)
 
-The accuracy achieved by LXMERT with this code base:
-
-
 | Split            | [VQA](https://visualqa.org/)     | [GQA](https://cs.stanford.edu/people/dorarad/gqa/)     | [NLVR2](http://lil.nlp.cornell.edu/nlvr/)  |
 |-----------       |:----:   |:---:    |:------:|
-| local validation | 69.90%  | 59.80%  | 74.95% |
-| test-dev         | 72.42%  | 60.00%  | 74.45% (test-P) |
-| test-standard    | 72.54%  | 60.33%  | 76.18% (test-U) |
+| Local Validation | 69.90%  | 59.80%  | 74.95% |
+| Test-Dev         | 72.42%  | 60.00%  | 74.45% (Test-P) |
+| Test-Standard    | 72.54%  | 60.33%  | 76.18% (Test-U) |
 
 All the results in the table are produced exactly with this code base.
-Since [VQA](https://evalai.cloudcv.org/web/challenges/challenge-page/163/overview) and [GQA](https://evalai.cloudcv.org/web/challenges/challenge-page/225/overview) test servers only allow limited number of 'test-standard' submissions,
+Since [VQA](https://evalai.cloudcv.org/web/challenges/challenge-page/163/overview) and [GQA](https://evalai.cloudcv.org/web/challenges/challenge-page/225/overview) test servers only allow limited number of 'Test-Standard' submissions,
 we use our remaining submission entry from [VQA](https://visualqa.org/challenge.html)/[GQA](https://cs.stanford.edu/people/dorarad/gqa/challenge.html) challenges 2019 to get these results.
 For [NLVR2](http://lil.nlp.cornell.edu/nlvr/), we only test once on the unpublished test set (test-U).
 
@@ -149,9 +146,9 @@ wget nlp.cs.unc.edu/data/lxmert_data/gqa/train.json -P data/gqa/
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/valid.json -P data/gqa/
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/testdev.json -P data/gqa/
 ```
-* Download faster-rcnn features for Vsiual Genome and GQA images (30 GB).
+* Download Faster R-CNN features for Visual Genome and GQA testing images (30 GB).
 GQA's training and validation data are collected from Visual Genome.
-Its testing images come from MS COCO test set (I have verified this with GQA author [Drew A. Hudson](https://www.linkedin.com/in/drew-a-hudson/)).
+Its testing images come from MS COCO test set (I have verified this with one of GQA authors [Drew A. Hudson](https://www.linkedin.com/in/drew-a-hudson/)).
 The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
 ```
@@ -337,14 +334,14 @@ unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 ```
 
-- Run on the whole [MS COCO](http://cocodataset.org) + [Visual Genome](https://visualgenome.org/) related datasets (i.e., [VQA](https://visualqa.org/), [GQA](https://cs.stanford.edu/people/dorarad/gqa/index.html), [COCO caption](http://cocodataset.org/#captions-2015), [VG Caption](https://visualgenome.org/), [VG QA](https://github.com/yukezhu/visual7w-toolkit)). 
-Here, we take a simple one-step pre-training strategy rather than the two-steps strategy (10 epochs without image QA and 10 epochs with image QA) described in our paper.
-We re-run the pre-training with current setup (12 epochs with all pre-training tasks) and did not find much difference between these two strategies. 
-The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that [my experience](../../blob/master/experience_in_pretraining.md) in this project would help researchers with limited computational resources.
+- Run on the whole [MS COCO](http://cocodataset.org) and [Visual Genome](https://visualgenome.org/) related datasets (i.e., [VQA](https://visualqa.org/), [GQA](https://cs.stanford.edu/people/dorarad/gqa/index.html), [COCO caption](http://cocodataset.org/#captions-2015), [VG Caption](https://visualgenome.org/), [VG QA](https://github.com/yukezhu/visual7w-toolkit)). 
+Here, we take a simple one-step pre-training strategy (12 epochs with all pre-training tasks) rather than the two-steps strategy in our paper (10 epochs without image QA and 10 epochs with image QA).
+We re-run the pre-training with this one-step setup and did not find much difference between these two strategies. 
+The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that [my experience](../../blob/master/experience_in_pretraining.md) in this project would help anyone with limited computational resources.
 ```
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 ```
-**I have tested this script before. However, in case I missed anything, please fine-tune with the weights saved in `pretrain/lxmert` when the pre-training goes (I saved the weights in `EpochXX_LXRT.pth` at the end of each epoch).  If the results do not keep growing, it means that the pre-training fails and please let me know!  **
+**I have tested this script before releasing. However, in case I missed anything, please fine-tune with the weights saved in `pretrain/lxmert` when the pre-training goes (I saved the weights in `EpochXX_LXRT.pth` at the end of each epoch).  If the results do not keep growing, it means that the pre-training fails and please let me know!  **
 > Multiple GPUs: Argument `0,1,2,3` indiciates taking first 4 GPUs to pre-train LXMERT. If the server does not have 4 GPUs (I am sorry to hear that), please consider halving the batch-size or using the [NVIDIA/apex](https://github.com/NVIDIA/apex) library to support half-precison computation. 
 The scripts uses the default data parallelism in PyTorch and thus extensible to less/more GPUs. The python main thread would take charge of the data loading. On 4 GPUs, we do not find that the data loading effects the speed a lot (around 5% overhead). However, it might become a bottleneck when more GPU's are involved thus please consider parallelizing the loading process as well.
 >
@@ -488,7 +485,7 @@ we use `lxrXXX` to denote the number of layers.
 E.g., `lxr955` (used in current pre-trained model) indicates 
 a model with 9 Language layers, 5 cross-modality layers, and 5 object-Relationship layers. 
 If we consider a single-modality layer as a half of cross-modality layer, 
-the total number of layer is `(9 + 5) / 2 + 5 = 12`, which is the same as `BERT_BASE`.
+the total number of layers is `(9 + 5) / 2 + 5 = 12`, which is the same as `BERT_BASE`.
 - We share the weight between the two cross-modality attention sub-layers. Please check the `visual_attention` [here](https://github.com/airsplay/lxmert/blob/c9fe5e78c8f15de922aab39ca35ebabf78705197/src/lxrt/modeling.py#L521), which is used to compute both `lang->visn` attention and `visn->lang` attention. (I am sorry that the name `visual_attention` is misleading because I deleted the `lang_attention` here.) Sharing weights is mostly used for saving computational resources and it also (intuitively) helps forcing the features from visn/lang into a joint subspace.
 - The box coordinates are not normalized from [0, 1] to [-1, 1], which looks like a typo but actually not ;). Normalizing the coordinate would not affect the output of box encoder (mathematically and almost numerically). ~~(Hint: consider the LayerNorm in positional encoding)~~
 
@@ -526,7 +523,7 @@ The two requirements could be installed following the instructions on the websit
 1. Docker CE (19.03): https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/
 2. nvidia-docker: https://github.com/NVIDIA/nvidia-docker
 
-For docker with old version, either updating it to docker 19.03 or using command `--runtime=nvidia` instead of `--gpus all' should help.
+For docker with old version, either updating it to docker 19.03 or using command `--runtime=nvidia` instead of `--gpus all' would be good.
 
 #### An Example: Feature Extraction for NLVR2 
 We demonstrate how to extract Faster R-CNN features of NLVR2 images.
@@ -608,14 +605,13 @@ If you find this project helps, please cite our paper :)
 We thank the funding support from ARO-YIP Award #W911NF-18-1-0336, & awards from Google, Facebook, Salesforce, and Adobe.
 
 We thank [Peter Anderson](https://panderson.me/) for providing the faster R-CNN code and pre-trained models under
-[Bottom-Up-Attention Github Repo](https://github.com/peteanderson80/bottom-up-attention).
-
+[Bottom-Up-Attention Github Repo](https://github.com/peteanderson80/bottom-up-attention).  
+We thank [Hengyuan Hu](https://www.linkedin.com/in/hengyuan-hu-8963b313b) for his [PyTorch VQA](https://github.com/hengyuan-hu/bottom-up-attention-vqa) implementation, our VQA implementation borrows its pre-processed answers.
 We thank [hugginface](https://github.com/huggingface) for releasing the excellent PyTorch code 
-[PyTorch Transformers](https://github.com/huggingface/pytorch-transformers).
+[PyTorch Transformers](https://github.com/huggingface/pytorch-transformers).  
 
-We thank [Hengyuan Hu](https://www.linkedin.com/in/hengyuan-hu-8963b313b) for his [PyTorch VQA](https://github.com/hengyuan-hu/bottom-up-attention-vqa) implementation, our local VQA evaluator borrows the idea from this repo.
-
-We thank [Alane Suhr](http://alanesuhr.com/) for helping test LXMERT on NLVR2 unreleased test split.
+We thank [Drew A. Hudson](https://www.linkedin.com/in/drew-a-hudson/) to answer all our questions about GQA specification.
+We thank [Alane Suhr](http://alanesuhr.com/) for helping test LXMERT on NLVR2 unreleased test split and provide detailed analysis [here](http://lil.nlp.cornell.edu/nlvr/NLVR2BiasAnalysis.html)
 
 We thank all the authors and annotators of vision-and-language datasets 
 (i.e., 
@@ -627,8 +623,7 @@ We thank all the authors and annotators of vision-and-language datasets
 ), 
 which allows us to develop a pre-trained model for vision-and-language tasks.
 
-We thank [Jie Lei](http://www.cs.unc.edu/~jielei/) and [Licheng Yu](http://www.cs.unc.edu/~licheng/) for their helpful discussions. I also want to thank [Shaoqing Ren](https://www.shaoqingren.com/) to teach me vision knowledge when I was in MSRA.
-
-We also thank you to look into our code. Please kindly contact us if you find any issue. Comments are always welcome.
+We thank [Jie Lei](http://www.cs.unc.edu/~jielei/) and [Licheng Yu](http://www.cs.unc.edu/~licheng/) for their helpful discussions. I also want to thank [Shaoqing Ren](https://www.shaoqingren.com/) to teach me vision knowledge when I was in MSRA.  
+We also thank you to help look into our code. Please kindly contact us if you find any issue. Comments are always welcome.
 
 LXRThanks.
