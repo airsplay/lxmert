@@ -27,7 +27,7 @@ We are the **only** team ranking **top-3** in both challenges.
 
 ## Pre-trained models
 The pre-trained model (870 MB) is available at `http://nlp.cs.unc.edu/data/model_LXRT.pth`, and could be downloaded with command:
-```
+```bash
 mkdir -p snap/pretrained 
 wget http://nlp.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
 ```
@@ -55,12 +55,12 @@ we provide descriptions for each dataset to take care of all details.
 
 ### General 
 The code requires **Python 3** and please install the python libs with command:
-```
+```bash
 pip install -r requirements.txt
 ```
 
 By the way, a python3 virtural environments could be set up and run by:
-```
+```bash
 virtualenv name_of_environment -p python3
 source name_of_environment/bin/activate
 ```
@@ -69,7 +69,7 @@ source name_of_environment/bin/activate
 * Please make sure the LXMERT pre-trained model is either [downloaded](#pre-trained-models) or [pre-trained](#pre-training).
 
 * Download the re-distributed json files for VQA 2.0 dataset. The raw VQA 2.0 dataset could be downloaded from the [official website](https://visualqa.org/download.html).
-```
+```bash
 mkdir -p data/vqa
 wget nlp.cs.unc.edu/data/lxmert_data/vqa/train.json -P data/vqa/
 wget nlp.cs.unc.edu/data/lxmert_data/vqa/nominival.json -P  data/vqa/
@@ -78,7 +78,7 @@ wget nlp.cs.unc.edu/data/lxmert_data/vqa/minival.json -P data/vqa/
 * Download faster-rcnn features for MS COCO train2014 (17 GB) and val2014 (8 GB) images (VQA 2.0 is collected on MS COCO dataset).
 The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
-```
+```bash
 mkdir -p data/mscoco_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
 unzip data/mscoco_imgfeat/train2014_obj36.zip -d data/mscoco_imgfeat && rm data/mscoco_imgfeat/train2014_obj36.zip
@@ -88,11 +88,11 @@ unzip data/mscoco_imgfeat/val2014_obj36.zip -d data && rm data/mscoco_imgfeat/va
 
 * Before fine-tuning on whole VQA 2.0 training set, verifying the script and model on a small training set (512 images) is recommended. 
 The first argument `0` is GPU id. The second argument `vqa_lxr955_tiny` is the name of this experiment.
-```
+```bash
 bash run/vqa_finetune.bash 0 vqa_lxr955_tiny --tiny
 ```
 * If no bug came out, then the model is ready to be trained on the whole VQA corpus:
-```
+```bash
 bash run/vqa_finetune.bash 0 vqa_lxr955
 ```
 * It takes around 8 hours (2 hours per epoch * 4 epochs) to converge. 
@@ -103,23 +103,23 @@ The validation result after training will be around **69.7%** to **70.2%**.
 The results on the validation set (our minival set) are printed while training.
 The validation result is also saved to `snap/vqa/[experiment-name]/log.log`.
 If the log file was accidentally deleted, the validation result in training is also reproducible from the model snapshot:
-```
+```bash
 bash run/vqa_test.bash 0 vqa_lxr955_results --test minival --load snap/vqa/vqa_lxr955/BEST
 ```
 #### Submitted to VQA test server
 - Download our re-distributed json file containing VQA 2.0 test data.
-```
+```bash
 wget nlp.cs.unc.edu/data/lxmert_data/vqa/test.json -P data/vqa/
 ```
 - Download the faster rcnn features for MS COCO test2015 split (16 GB).
-```
+```bash
 wget nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/test2015_obj36.zip -P data/mscoco_imgfeat
 unzip data/mscoco_imgfeat/test2015_obj36.zip -d data && rm data/mscoco_imgfeat/test2015_obj36.zip
 ```
 - Since VQA submission system requires submitting whole test data, we need to run inference over all test splits 
 (i.e., test dev, test standard, test challenge, and test held-out). 
 It takes around 10~15 mins to run test inference (448K instances to run).
-```
+```bash
 bash run/vqa_test.bash 0 vqa_lxr955_results --test test --load snap/vqa/vqa_lxr955/BEST
 ```
 - The test results will be saved in `snap/vqa_lxr955_results/test_predict.json`. 
@@ -143,7 +143,7 @@ https://evalai.cloudcv.org/web/challenges/challenge-page/163/leaderboard/498
 * Download the re-distributed json files for GQA balanced version dataset.
 The original GQA dataset is available [here](https://cs.stanford.edu/people/dorarad/gqa/download.html) and the script to 
 preprocess these datasets is under `data/gqa/process_raw_data_scripts`.
-```
+```bash
 mkdir -p data/gqa
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/train.json -P data/gqa/
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/valid.json -P data/gqa/
@@ -154,7 +154,7 @@ GQA's training and validation data are collected from Visual Genome.
 Its testing images come from MS COCO test set (I have verified this with GQA author [Drew A. Hudson](https://www.linkedin.com/in/drew-a-hudson/)).
 The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
-```
+```bash
 mkdir -p data/vg_gqa_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
 unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_gqa_obj36.zip
@@ -164,13 +164,13 @@ unzip data/vg_gqa_imgfeat/gqa_testdev_obj36.zip -d data && rm data/vg_gqa_imgfea
 
 * Before fine-tuning on whole GQA training+validation set, verifying the script and model on a small training set (512 images) is recommended. 
 The first argument `0` is GPU id. The second argument `gqa_lxr955_tiny` is the name of this experiment.
-```
+```bash
 bash run/gqa_finetune.bash 0 gqa_lxr955_tiny --tiny
 ```
 
 * If no bug came out, then the model is ready to be trained on the whole GQA corpus (train + validation), and validate on 
 the testdev set:
-```
+```bash
 bash run/gqa_finetune.bash 0 gqa_lxr955
 ```
 * It takes around 16 hours (4 hours per epoch * 4 epochs) to converge. 
@@ -180,7 +180,7 @@ The validation result after training will be around **59.8%** to **60.1%**.
 #### Local Validation
 The results on testdev is printed out while training and saved in `snap/gqa/gqa_lxr955/log.log`.
 It could be also re-calculated with command:
-```
+```bash
 bash run/gqa_test.bash 0 gqa_lxr955_results --load snap/gqa/gqa_lxr955/BEST --test testdev --batchSize 1024
 ```
 
@@ -195,14 +195,14 @@ want to have the exact number without submitting.
 
 #### Submitted to GQA test server
 - Download our re-distributed json file containing GQA test data.
-```
+```bash
 wget nlp.cs.unc.edu/data/lxmert_data/gqa/submit.json -P data/gqa/
 ```
 
 - Since GQA submission system requires submitting the whole test data, 
 we need to run inference over all test splits.
 It takes around 30~60 mins to run test inference (4.2M instances to run).
-```
+```bash
 bash run/gqa_test.bash 0 gqa_lxr955_results --load snap/gqa/gqa_lxr955/BEST --test submit --batchSize 1024
 ```
 
@@ -223,12 +223,12 @@ https://evalai.cloudcv.org/web/challenges/challenge-page/225/leaderboard
 #### Fine-tuning
 
 - Download the NLVR2 data from the official [github repo](https://github.com/lil-lab/nlvr).
-```
+```bash
 git clone https://github.com/lil-lab/nlvr.git data/nlvr2/nlvr
 ```
 
 - Process the NLVR2 data to json files.
-```
+```bash
 bash -c "cd data/nlvr2/process_raw_data_scripts && python process_dataset.py"
 ```
 
@@ -237,7 +237,7 @@ The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
 To access to the original images, please follow the instructions on [NLVR2 official Github](https://github.com/lil-lab/nlvr/tree/master/nlvr2).
 The images could either be downloaded with the urls or by signing an agreement form for data usage. And the feature could be extracted as described in [feature extraction](#faster-r-cnn-feature-extraction)
-```
+```bash
 mkdir -p data/nlvr2_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/train_obj36.zip -P data/nlvr2_imgfeat
 unzip data/nlvr2_imgfeat/train_obj36.zip -d data && rm data/nlvr2_imgfeat/train_obj36.zip
@@ -249,7 +249,7 @@ unzip data/nlvr2_imgfeat/valid_obj36.zip -d data && rm data/nlvr2_imgfeat/valid_
 The first argument `0` is GPU id. The second argument `nlvr2_lxr955_tiny` is the name of this experiment.
 Do not worry if the result is low (50~55) on this tiny split, 
 the whole training data would bring the performance back.
-```
+```bash
 bash run/nlvr2_finetune.bash 0 nlvr2_lxr955_tiny --tiny
 ```
 
@@ -257,19 +257,19 @@ bash run/nlvr2_finetune.bash 0 nlvr2_lxr955_tiny --tiny
 it means that the code, the data, and image features are ready.
 Please use this command to train on the full training set. 
 The result on NLVR2 validation (dev) set would be around **74.0** to **74.5**.
-```
+```bash
 bash run/nlvr2_finetune.bash 0 nlvr2_lxr955
 ```
 
 #### Inference on Public Test Split
 - Download NLVR2 image features for the public test split (1.6 GB).
-```
+```bash
 wget nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/test_obj36.zip -P data/nlvr2_imgfeat
 unzip data/nlvr2_imgfeat/test_obj36.zip -d data/nlvr2_imgfeat && rm data/nlvr2_imgfeat/test_obj36.zip
 ```
 
 - Test on the public test set (corresponding to 'test-P' on [NLVR2 leaderboard](http://lil.nlp.cornell.edu/nlvr/)) with:
-```
+```bash
 bash run/nlvr2_test.bash 0 nlvr2_lxr955_results --load snap/nlvr2/nlvr2_lxr955/BEST --test test --batchSize 1024
 ```
 
@@ -278,7 +278,7 @@ It also saves the predictions in the file `test_predict.csv`
 under `snap/nlvr2_lxr955_reuslts`, which is compatible to NLVR2 [official evaluation script](https://github.com/lil-lab/nlvr/tree/master/nlvr2/eval).
 The official eval script also calculates consistency ('Cons') besides the accuracy.
 We could use this official script to verify the results by running:
-```
+```bash
 python data/nlvr2/nlvr/nlvr2/eval/metrics.py snap/nlvr2/nlvr2_lxr955_results/test_predict.csv data/nlvr2/nlvr/nlvr2/data/test1.json
 ```
 
@@ -298,7 +298,7 @@ and [NLVR project website](http://lil.nlp.cornell.edu/nlvr/) for details.
 ### General Debugging Options
 Since it takes a few minutes to load the features, the code has an option to prototype with a small amount of
 training data. 
-```
+```bash
 # Training with 512 images:
 bash run/vqa_finetune.bash 0 --tiny 
 # Training with 4096 images:
@@ -308,7 +308,7 @@ bash run/vqa_finetune.bash 0 --fast
 ## Pre-training
 
 - Download our aggregated LXMERT dataset from MS COCO, Visual Genome, VQA, and GQA (around 700MB in total). The answer labels are saved in `data/lxmert/all_ans.json`.
-```
+```bash
 mkdir -p data/lxmert
 wget nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_train.json -P data/lxmert/
 wget nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_nominival.json -P data/lxmert/
@@ -317,7 +317,7 @@ wget nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_minival.json -P data/lxmert/
 ```
 
 - [*Skip this if you have run [VQA fine-tuning](#vqa).*] Download the detection features for MS COCO images.
-```
+```bash
 mkdir -p data/mscoco_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
 unzip data/mscoco_imgfeat/train2014_obj36.zip -d data/mscoco_imgfeat && rm data/mscoco_imgfeat/train2014_obj36.zip
@@ -326,14 +326,14 @@ unzip data/mscoco_imgfeat/val2014_obj36.zip -d data && rm data/mscoco_imgfeat/va
 ```
 
 - [*Skip this if you have run [GQA fine-tuning](#gqa).*] Download the detection features for Visual Genome images.
-```
+```bash
 mkdir -p data/vg_gqa_imgfeat
 wget nlp.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
 unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_gqa_obj36.zip
 ```
 
 - Test on a small split of the MS COCO + Visual Genome datasets:
-```
+```bash
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 ```
 
@@ -341,7 +341,7 @@ bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU --tiny
 Here, we take a simple one-step pre-training strategy rather than the two-steps strategy (10 epochs without image QA and 10 epochs with image QA) described in our paper.
 We re-run the pre-training with current setup (12 epochs with all pre-training tasks) and did not find much difference between these two strategies. 
 The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that [my experience](../../blob/master/experience_in_pretraining.md) in this project would help researchers with limited computational resources.
-```
+```bash
 bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
 ```
 **I have tested this script before. However, in case I missed anything, please fine-tune with the weights saved in `pretrain/lxmert` when the pre-training goes (I saved the weights in `EpochXX_LXRT.pth` at the end of each epoch).  If the results do not keep growing, it means that the pre-training fails and please let me know!  **
@@ -351,7 +351,7 @@ The scripts uses the default data parallelism in PyTorch and thus extensible to 
 > GPU Types: We find that either Titan XP, GTX 2080, and Titan V could support this pre-training. However, GTX 1080, with its 11G memory, is a little bit small thus please change the batch_size to 224 (instead of 256).
 
 - Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
-```
+```bash
 python src/pretrain/lxmert_pretrain_new.py \
     # The pre-training tasks
     --taskMaskLM --taskObjPredict --taskMatched --taskQA \  
@@ -510,11 +510,11 @@ The BUTD feature extractor is widely used in many other projects. If you want to
 [Docker](https://www.docker.com/) is a easy-to-use virturlization tool which allows you to plug and play without installing libraries.
 
 The built docker file for bottom-up-attention is released on [docker hub](https://hub.docker.com/r/airsplay/bottom-up-attention) and could be downloaded with command:
-```
+```bash
 sudo docker pull airsplay/bottom-up-attention
 ```
 After pulling the docker, you could test running the docker container with command:
-```
+```bash
 docker run --gpus all --rm -it airsplay/bottom-up-attention bash
 ``` 
 
@@ -534,12 +534,12 @@ We demonstrate how to extract Faster R-CNN features of NLVR2 images.
 - Please first following the instruction on [NLVR2 official github](https://github.com/lil-lab/nlvr/tree/master/nlvr2) to get the images.
 
 - Download the pre-trained Faster R-CNN model. Instead of using the default pre-trained model (trained with 10 to 100 boxes), we use the ['alternative pretrained model'](https://github.com/peteanderson80/bottom-up-attention#demo) which trained with 36 boxes. 
-```
+```bash
 wget https://www.dropbox.com/s/bacig173qnxddvz/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1 -O data/nlvr2_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
 ```
 
 - Run docker container with command:
-```
+```bash
 docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/lxrt_public/data/nlvr2_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
 `-v` mounts the folders on host os to the docker image container.
@@ -553,7 +553,7 @@ docker run --gpus all -v /path/to/nlvr2/images:/workspace/images:ro -v /path/to/
 
 
 - Extract the features **inside the docker container**. The extraction script is copied from [butd/tools/generate_tsv.py](https://github.com/peteanderson80/bottom-up-attention/blob/master/tools/generate_tsv.py) and modified by [Jie Lei](http://www.cs.unc.edu/~jielei/) and me.
-```
+```bash
 cd /workspace/features
 CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split train 
 CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split valid
@@ -568,13 +568,13 @@ CUDA_VISIBLE_DEVICES=0 python extract_nlvr2_image.py --split test
 - Download the MS COCO train2014, val2014, and test2015 images from [MS COCO official website](http://cocodataset.org/#download).
 
 - Download the pre-trained Faster R-CNN weights. 
-```
+```bash
 mkdir -p data/mscoco_imgfeat
 wget https://www.dropbox.com/s/bacig173qnxddvz/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1 -O data/mscoco_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
 ```
 
 - Run docker container with command:
-```
+```bash
 docker run --gpus all -v /path/to/mscoco/images:/workspace/images:ro -v $(pwd)/data/mscoco_imgfeat:/workspace/features --rm -it airsplay/bottom-up-attention bash
 ```
 > Note: Option `-v` mounts the folders outside container to the paths inside the container.
@@ -582,7 +582,7 @@ docker run --gpus all -v /path/to/mscoco/images:/workspace/images:ro -v $(pwd)/d
 > Note1: Please use the **absolute path** to the ms coco images folder `images`. The `images` folder containing the `train2014`, `val2014`, and `test2015` sub-folders. (It's a standard way to save MS COCO images.)
 
 - Extract the features **inside the docker container**.
-```
+```bash
 cd /workspace/features
 CUDA_VISIBLE_DEVICES=0 python extract_coco_image.py --split train 
 CUDA_VISIBLE_DEVICES=0 python extract_coco_image.py --split valid
@@ -595,7 +595,7 @@ CUDA_VISIBLE_DEVICES=0 python extract_coco_image.py --split test
 ## Reference
 If you find this project helps, please cite our paper :)
 
-```
+```bibtex
 @inproceedings{tan2019lxmert,
   title={LXMERT: Learning Cross-Modality Encoder Representations from Transformers},
   author={Tan, Hao and Bansal, Mohit},
