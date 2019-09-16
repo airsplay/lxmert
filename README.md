@@ -219,10 +219,11 @@ https://evalai.cloudcv.org/web/challenges/challenge-page/225/leaderboard
 
 #### Fine-tuning
 
-1. Download the NLVR2 data from the official [github repo](https://github.com/lil-lab/nlvr).
+1. Download the NLVR2 data from the official [GitHub repo](https://github.com/lil-lab/nlvr).
     ```bash
-    git clone https://github.com/lil-lab/nlvr.git data/nlvr2/nlvr
+    git submodule update --init
     ```
+
 
 2. Process the NLVR2 data to json files.
     ```bash
