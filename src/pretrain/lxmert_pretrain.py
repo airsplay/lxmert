@@ -1,8 +1,6 @@
 # coding=utf-8
 # Copyright 2019 project LXRT.
 
-from __future__ import absolute_import, division, print_function
-
 import collections
 import os
 import random
