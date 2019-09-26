@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyr, Hmmm, this is just feature loading which could be used anywhere.
+# Copyleft 2019 Project LXRT
 
 import sys
 import csv

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2019 project LXRT.
+# Copyleft 2019 project LXRT.
 
 import json
 import torch
