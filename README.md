@@ -33,8 +33,7 @@ wget http://nlp.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
 If download speed is slower than expected, the pre-trained model could also be downloaded from [other sources](#alternative-dataset-and-features-download-links).
 Please help put the downloaded file at `snap/pretrained/model_LXRT.pth`.
 
-We also provide data and commands to pre-train the model in [pre-training](#pre-training).
-The default setup needs 4 GPUs and takes around a week to finish.
+We also provide data and commands to pre-train the model in [pre-training](#pre-training). The default setup needs 4 GPUs and takes around a week to finish. The pre-trained weights with this code base could be downloaded from `https://nlp.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, `XX` from 01 to 12. It is pre-trained for 12 epochs (instead of 20 in EMNLP paper) thus the fine-tuned reuslts are about 0.3% lower on each datasets. 
 
 
 
@@ -342,13 +341,14 @@ The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that 
     ```bash
     bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
     ```
-    **I have tested this script before releasing. However, in case I missed anything, please fine-tune with the weights saved in `pretrain/lxmert` when the pre-training goes (I saved the weights in `EpochXX_LXRT.pth` at the end of each epoch).  If the results do not keep growing, it means that the pre-training fails and please let me know!**
     > Multiple GPUs: Argument `0,1,2,3` indicates taking first 4 GPUs to pre-train LXMERT. If the server does not have 4 GPUs (I am sorry to hear that), please consider halving the batch-size or using the [NVIDIA/apex](https://github.com/NVIDIA/apex) library to support half-precision computation. 
     The scripts uses the default data parallelism in PyTorch and thus extensible to less/more GPUs. The python main thread would take charge of the data loading. On 4 GPUs, we do not find that the data loading effects the speed a lot (around 5% overhead). However, it might become a bottleneck when more GPUs are involved thus please consider parallelizing the loading process as well.
     >
     > GPU Types: We find that either Titan XP, GTX 2080, and Titan V could support this pre-training. However, GTX 1080, with its 11G memory, is a little bit small thus please change the batch_size to 224 (instead of 256).
 
-6. Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
+6. I have **verified these pre-training commands**. The pre-trained weights from previous process could be downloaded from `https://nlp.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, XX from `01` to `12`. The results are roughly the same (around 0.3% lower because of fewer epochs). 
+
+7. Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
     ```bash
     python src/pretrain/lxmert_pretrain_new.py \
         # The pre-training tasks
@@ -507,14 +507,17 @@ The BUTD feature extractor is widely used in many other projects. If you want to
 ### Feature Extraction with Docker
 [Docker](https://www.docker.com/) is a easy-to-use virtualization tool which allows you to plug and play without installing libraries.
 
-The built docker file for bottom-up-attention is released on [docker hub](https://hub.docker.com/r/airsplay/bottom-up-attention) and could be downloaded with command:
+The built docker file for bottom-up-attention is released on [docker hub](https://hub.docker.com/r/airsplay/bottom-up-attention) and could be downloaded with command: 
 ```bash
 sudo docker pull airsplay/bottom-up-attention
 ```
+> The `Dockerfile` could be downloaed [here](https://drive.google.com/file/d/1KJjwQtqisXvinWm8OORk-_3XYLBHYCIK/view?usp=sharing), which allows using other CUDA versions.
+
 After pulling the docker, you could test running the docker container with command:
 ```bash
 docker run --gpus all --rm -it airsplay/bottom-up-attention bash
 ``` 
+
 
 If errors about `--gpus all` popped up, please read the next section.
 
@@ -605,8 +608,7 @@ If you find this project helps, please cite our paper :)
 We thank the funding support from ARO-YIP Award #W911NF-18-1-0336, & awards from Google, Facebook, Salesforce, and Adobe.
 
 We thank [Peter Anderson](https://panderson.me/) for providing the faster R-CNN code and pre-trained models under
-[Bottom-Up-Attention Github Repo](https://github.com/peteanderson80/bottom-up-attention).  
-We thank [Hengyuan Hu](https://www.linkedin.com/in/hengyuan-hu-8963b313b) for his [PyTorch VQA](https://github.com/hengyuan-hu/bottom-up-attention-vqa) implementation, our VQA implementation borrows its pre-processed answers.
+[Bottom-Up-Attention Github Repo](https://github.com/peteanderson80/bottom-up-attention).  We thank [Hengyuan Hu](https://www.linkedin.com/in/hengyuan-hu-8963b313b) for his [PyTorch VQA](https://github.com/hengyuan-hu/bottom-up-attention-vqa) implementation, our VQA implementation borrows its pre-processed answers.
 We thank [hugginface](https://github.com/huggingface) for releasing the excellent PyTorch code 
 [PyTorch Transformers](https://github.com/huggingface/pytorch-transformers).  
 
@@ -623,7 +625,6 @@ We thank all the authors and annotators of vision-and-language datasets
 ), 
 which allows us to develop a pre-trained model for vision-and-language tasks.
 
-We thank [Jie Lei](http://www.cs.unc.edu/~jielei/) and [Licheng Yu](http://www.cs.unc.edu/~licheng/) for their helpful discussions. I also want to thank [Shaoqing Ren](https://www.shaoqingren.com/) to teach me vision knowledge when I was in MSRA.  
-We also thank you to help look into our code. Please kindly contact us if you find any issue. Comments are always welcome.
+We thank [Jie Lei](http://www.cs.unc.edu/~jielei/) and [Licheng Yu](http://www.cs.unc.edu/~licheng/) for their helpful discussions. I also want to thank [Shaoqing Ren](https://www.shaoqingren.com/) to teach me vision knowledge when I was in MSRA.  We also thank you to help look into our code. Please kindly contact us if you find any issue. Comments are always welcome.
 
 LXRThanks.

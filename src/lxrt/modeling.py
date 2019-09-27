@@ -1033,7 +1033,13 @@ class LXRTPretraining(BertPreTrainedModel):
             answer_loss = loss_fct(
                 answer_score.view(-1, self.num_answers),
                 ans.view(-1)
-            ) * 2       # Multiply by 2 because > half of the data will not have label
+            )  
+            # Since this Github version pre-trains with QA loss from the beginning,
+            # I exclude "*2" here to match the effect of QA losses.
+            # Previous: (loss *0) for 6 epochs, (loss *2) for 6 epochs.   (Used 10 instead of 6 in EMNLP paper)
+            # Now     : (loss *1) for 12 epochs
+            #
+            # * 2       # Multiply by 2 because > half of the data will not have label
             total_loss += answer_loss
             losses += (answer_loss.detach(),)
         return total_loss, torch.stack(losses).unsqueeze(0), answer_score.detach()

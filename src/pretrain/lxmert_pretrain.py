@@ -355,7 +355,7 @@ class LXMERT:
             if avg_eval_loss < best_eval_loss:
                 best_eval_loss = avg_eval_loss
                 self.save("BEST_EVAL_LOSS")
-            self.save("Epoch%02d" % epoch)
+            self.save("Epoch%02d" % (epoch+1))
 
     def evaluate_epoch(self, eval_tuple: DataTuple, iters: int=-1):
         self.model.eval()
