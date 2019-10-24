@@ -16,6 +16,6 @@ CUDA_VISIBLE_DEVICES=$1 PYTHONPATH=$PYTHONPATH:./src \
     --train mscoco_train,mscoco_nominival,vgnococo --valid mscoco_minival \
     --llayers 9 --xlayers 5 --rlayers 5 \
     --fromScratch \
-    --batchSize 256 --optim bert --lr 1e-4 --epochs 12 \
+    --batchSize 256 --optim bert --lr 1e-4 --epochs 20 \
     --tqdm --output $output ${@:2}
 

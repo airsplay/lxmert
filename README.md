@@ -304,7 +304,7 @@ bash run/vqa_finetune.bash 0 --fast
 
 ## Pre-training
 
-1. Download our aggregated LXMERT dataset from MS COCO, Visual Genome, VQA, and GQA (around 700MB in total). The answer labels are saved in `data/lxmert/all_ans.json`.
+1. Download our aggregated LXMERT dataset from MS COCO, Visual Genome, VQA, and GQA (around 700MB in total). The joint answer labels are saved in `data/lxmert/all_ans.json`.
     ```bash
     mkdir -p data/lxmert
     wget nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_train.json -P data/lxmert/
@@ -335,18 +335,17 @@ bash run/vqa_finetune.bash 0 --fast
     ```
 
 5. Run on the whole [MS COCO](http://cocodataset.org) and [Visual Genome](https://visualgenome.org/) related datasets (i.e., [VQA](https://visualqa.org/), [GQA](https://cs.stanford.edu/people/dorarad/gqa/index.html), [COCO caption](http://cocodataset.org/#captions-2015), [VG Caption](https://visualgenome.org/), [VG QA](https://github.com/yukezhu/visual7w-toolkit)). 
-Here, we take a simple one-step pre-training strategy (12 epochs with all pre-training tasks) rather than the two-steps strategy in our paper (10 epochs without image QA and 10 epochs with image QA).
-We re-run the pre-training with this one-step setup and did not find much difference between these two strategies. 
-The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that [my experience](experience_in_pretraining.md) in this project would help anyone with limited computational resources.
+Here, we take a simple single-stage pre-training strategy (20 epochs with all pre-training tasks) rather than the two-stage strategy in our paper (10 epochs without image QA and 10 epochs with image QA).
+The pre-training finishes in **8.5 days** on **4 GPUs**.  By the way, I hope that [my experience](experience_in_pretraining.md) in this project would help anyone with limited computational resources.
     ```bash
     bash run/lxmert_pretrain.bash 0,1,2,3 --multiGPU
     ```
-    > Multiple GPUs: Argument `0,1,2,3` indicates taking first 4 GPUs to pre-train LXMERT. If the server does not have 4 GPUs (I am sorry to hear that), please consider halving the batch-size or using the [NVIDIA/apex](https://github.com/NVIDIA/apex) library to support half-precision computation. 
-    The scripts uses the default data parallelism in PyTorch and thus extensible to less/more GPUs. The python main thread would take charge of the data loading. On 4 GPUs, we do not find that the data loading effects the speed a lot (around 5% overhead). However, it might become a bottleneck when more GPUs are involved thus please consider parallelizing the loading process as well.
+    > Multiple GPUs: Argument `0,1,2,3` indicates taking 4 GPUs to pre-train LXMERT. If the server does not have 4 GPUs (I am sorry to hear that), please consider halving the batch-size or using the [NVIDIA/apex](https://github.com/NVIDIA/apex) library to support half-precision computation. 
+    The code uses the default data parallelism in PyTorch and thus extensible to less/more GPUs. The python main thread would take charge of the data loading. On 4 GPUs, we do not find that the data loading becomes a bottleneck (around 5% overhead). 
     >
     > GPU Types: We find that either Titan XP, GTX 2080, and Titan V could support this pre-training. However, GTX 1080, with its 11G memory, is a little bit small thus please change the batch_size to 224 (instead of 256).
 
-6. I have **verified these pre-training commands**. The pre-trained weights from previous process could be downloaded from `https://nlp.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, XX from `01` to `12`. The results are roughly the same (around 0.3% lower because of fewer epochs). 
+6. I have **verified these pre-training commands** with 12 epochs. The pre-trained weights from previous process could be downloaded from `https://nlp.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, XX from `01` to `12`. The results are roughly the same (around 0.3% lower in downstream tasks because of fewer epochs). 
 
 7. Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
     ```bash
@@ -374,7 +373,7 @@ The pre-training finishes in **7 days** on **4 GPUs**.  By the way, I hope that 
         --fromScratch \
     
         # Hyper parameters
-        --batchSize 256 --optim bert --lr 1e-4 --epochs 12 \
+        --batchSize 256 --optim bert --lr 1e-4 --epochs 20 \
         --tqdm --output $output ${@:2}
     ```
 
