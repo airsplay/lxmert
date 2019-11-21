@@ -2,6 +2,7 @@
 # Copyleft 2019 project LXRT.
 
 import json
+import os
 import pickle
 
 import numpy as np
@@ -20,6 +21,13 @@ FAST_IMG_NUM = 5000
 # The path to data and image features.
 VQA_DATA_ROOT = 'data/vqa/'
 MSCOCO_IMGFEAT_ROOT = 'data/mscoco_imgfeat/'
+SPLIT2NAME = {
+    'train': 'train2014',
+    'valid': 'val2014',
+    'minival': 'val2014',
+    'nominival': 'val2014',
+    'test': 'test2015',
+}
 
 
 class VQADataset:
@@ -85,22 +93,13 @@ class VQATorchDataset(Dataset):
 
         # Loading detection features to img_data
         img_data = []
-        if 'train' in dataset.splits:
-            img_data.extend(load_obj_tsv('data/mscoco_imgfeat/train2014_obj36.tsv', topk=topk))
-        if 'valid' in dataset.splits:
-            img_data.extend(load_obj_tsv('data/mscoco_imgfeat/val2014_obj36.tsv', topk=topk))
-        if 'minival' in dataset.splits:
-            # minival is 5K images in the intersection of MSCOCO valid and VG,
-            # which is used in evaluating LXMERT pretraining performance.
-            # It is saved as the top 5K features in val2014_obj36.tsv
-            if topk is None:
-                topk = 5000
-            img_data.extend(load_obj_tsv('data/mscoco_imgfeat/val2014_obj36.tsv', topk=topk))
-        if 'nominival' in dataset.splits:
-            # nominival = mscoco val - minival
-            img_data.extend(load_obj_tsv('data/mscoco_imgfeat/val2014_obj36.tsv', topk=topk))
-        if 'test' in dataset.name:      # If dataset contains any test split
-            img_data.extend(load_obj_tsv('data/mscoco_imgfeat/test2015_obj36.tsv', topk=topk))
+        for split in dataset.splits:
+            # Minival is 5K images in MS COCO, which is used in evaluating VQA/LXMERT-pre-training.
+            # It is saved as the top 5K features in val2014_***.tsv
+            load_topk = 5000 if (split == 'minival' and topk is None) else topk
+            img_data.extend(load_obj_tsv(
+                os.path.join(MSCOCO_IMGFEAT_ROOT, '%s_obj36.tsv' % (SPLIT2NAME[split])),
+                topk=load_topk))
 
         # Convert img list to dict
         self.imgid2img = {}

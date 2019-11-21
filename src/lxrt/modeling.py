@@ -257,24 +257,8 @@ class BertConfig(object):
         """Serializes this instance to a JSON string."""
         return json.dumps(self.to_dict(), indent=2, sort_keys=True) + "\n"
 
-try:
-    from apex.normalization.fused_layer_norm import FusedLayerNorm as BertLayerNorm
-except ImportError:
-    logger.info("Better speed can be achieved with apex installed from https://www.github.com/nvidia/apex .")
-    class BertLayerNorm(nn.Module):
-        def __init__(self, hidden_size, eps=1e-12):
-            """Construct a layernorm module in the TF style (epsilon inside the square root).
-            """
-            super(BertLayerNorm, self).__init__()
-            self.weight = nn.Parameter(torch.ones(hidden_size))
-            self.bias = nn.Parameter(torch.zeros(hidden_size))
-            self.variance_epsilon = eps
 
-        def forward(self, x):
-            u = x.mean(-1, keepdim=True)
-            s = (x - u).pow(2).mean(-1, keepdim=True)
-            x = (x - u) / torch.sqrt(s + self.variance_epsilon)
-            return self.weight * x + self.bias
+BertLayerNorm = torch.nn.LayerNorm
 
 
 class BertEmbeddings(nn.Module):
@@ -308,7 +292,7 @@ class BertEmbeddings(nn.Module):
         return embeddings
 
 
-class BertOutAttention(nn.Module):
+class BertAttention(nn.Module):
     def __init__(self, config, ctx_dim=None):
         super().__init__()
         if config.hidden_size % config.num_attention_heads != 0:
@@ -363,61 +347,9 @@ class BertOutAttention(nn.Module):
         return context_layer
 
 
-class BertSelfAttention(nn.Module):
+class BertAttOutput(nn.Module):
     def __init__(self, config):
-        super(BertSelfAttention, self).__init__()
-        if config.hidden_size % config.num_attention_heads != 0:
-            raise ValueError(
-                "The hidden size (%d) is not a multiple of the number of attention "
-                "heads (%d)" % (config.hidden_size, config.num_attention_heads))
-        self.num_attention_heads = config.num_attention_heads
-        self.attention_head_size = int(config.hidden_size / config.num_attention_heads)
-        self.all_head_size = self.num_attention_heads * self.attention_head_size
-
-        self.query = nn.Linear(config.hidden_size, self.all_head_size)
-        self.key = nn.Linear(config.hidden_size, self.all_head_size)
-        self.value = nn.Linear(config.hidden_size, self.all_head_size)
-
-        self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
-
-    def transpose_for_scores(self, x):
-        new_x_shape = x.size()[:-1] + (self.num_attention_heads, self.attention_head_size)
-        x = x.view(*new_x_shape)
-        return x.permute(0, 2, 1, 3)
-
-    def forward(self, hidden_states, attention_mask=None):
-        mixed_query_layer = self.query(hidden_states)
-        mixed_key_layer = self.key(hidden_states)
-        mixed_value_layer = self.value(hidden_states)
-
-        query_layer = self.transpose_for_scores(mixed_query_layer)
-        key_layer = self.transpose_for_scores(mixed_key_layer)
-        value_layer = self.transpose_for_scores(mixed_value_layer)
-
-        # Take the dot product between "query" and "key" to get the raw attention scores.
-        attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))
-        attention_scores = attention_scores / math.sqrt(self.attention_head_size)
-        # Apply the attention mask is (precomputed for all layers in BertModel forward() function)
-        if attention_mask is not None:
-            attention_scores = attention_scores + attention_mask
-
-        # Normalize the attention scores to probabilities.
-        attention_probs = nn.Softmax(dim=-1)(attention_scores)
-
-        # This is actually dropping out entire tokens to attend to, which might
-        # seem a bit unusual, but is taken from the original Transformer paper.
-        attention_probs = self.dropout(attention_probs)
-
-        context_layer = torch.matmul(attention_probs, value_layer)
-        context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
-        new_context_layer_shape = context_layer.size()[:-2] + (self.all_head_size,)
-        context_layer = context_layer.view(*new_context_layer_shape)
-        return context_layer
-
-
-class BertSelfOutput(nn.Module):
-    def __init__(self, config):
-        super(BertSelfOutput, self).__init__()
+        super(BertAttOutput, self).__init__()
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.LayerNorm = BertLayerNorm(config.hidden_size, eps=1e-12)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
@@ -429,11 +361,11 @@ class BertSelfOutput(nn.Module):
         return hidden_states
 
 
-class BertXAttention(nn.Module):
-    def __init__(self, config, ctx_dim=None):
+class BertCrossattLayer(nn.Module):
+    def __init__(self, config):
         super().__init__()
-        self.att = BertOutAttention(config, ctx_dim=ctx_dim)
-        self.output = BertSelfOutput(config)
+        self.att = BertAttention(config)
+        self.output = BertAttOutput(config)
 
     def forward(self, input_tensor, ctx_tensor, ctx_att_mask=None):
         output = self.att(input_tensor, ctx_tensor, ctx_att_mask)
@@ -441,14 +373,15 @@ class BertXAttention(nn.Module):
         return attention_output
 
 
-class BertAttention(nn.Module):
+class BertSelfattLayer(nn.Module):
     def __init__(self, config):
-        super(BertAttention, self).__init__()
-        self.self = BertSelfAttention(config)
-        self.output = BertSelfOutput(config)
+        super(BertSelfattLayer, self).__init__()
+        self.self = BertAttention(config)
+        self.output = BertAttOutput(config)
 
     def forward(self, input_tensor, attention_mask):
-        self_output = self.self(input_tensor, attention_mask)
+        # Self attention attends to itself, thus keys and querys are the same (input_tensor).
+        self_output = self.self(input_tensor, input_tensor, attention_mask)
         attention_output = self.output(self_output, input_tensor)
         return attention_output
 
@@ -485,7 +418,7 @@ class BertOutput(nn.Module):
 class BertLayer(nn.Module):
     def __init__(self, config):
         super(BertLayer, self).__init__()
-        self.attention = BertAttention(config)
+        self.attention = BertSelfattLayer(config)
         self.intermediate = BertIntermediate(config)
         self.output = BertOutput(config)
 
@@ -497,26 +430,27 @@ class BertLayer(nn.Module):
 
 
 """
-The above modules are copied from BERT.
+---------------------------------------------------------------------------------------
+      Above modules are copied from BERT (pytorch-transformer) with modifications.
+---------------------------------------------------------------------------------------
 """
 
 
 class LXRTXLayer(nn.Module):
     def __init__(self, config):
         super().__init__()
+        # The cross-attention Layer
+        self.visual_attention = BertCrossattLayer(config)
 
-        # Lang self-att and FFN layer
-        self.lang_self_att = BertAttention(config)
+        # Self-attention Layers
+        self.lang_self_att = BertSelfattLayer(config)
+        self.visn_self_att = BertSelfattLayer(config)
+
+        # Intermediate and Output Layers (FFNs)
         self.lang_inter = BertIntermediate(config)
         self.lang_output = BertOutput(config)
-
-        # Visn self-att and FFN layer
-        self.visn_self_att = BertAttention(config)
         self.visn_inter = BertIntermediate(config)
         self.visn_output = BertOutput(config)
-
-        # The cross attention layer
-        self.visual_attention = BertXAttention(config)
 
     def cross_att(self, lang_input, lang_attention_mask, visn_input, visn_attention_mask):
         # Cross Attention
