@@ -54,10 +54,8 @@ class GQA:
             load_lxmert_qa(args.load_lxmert_qa, self.model,
                            label2ans=self.train_tuple.dataset.label2ans)
 
-        # GPU options
+        # Transfer to GPU before apex
         self.model = self.model.cuda()
-        if args.multiGPU:
-            self.model.lxrt_encoder.multi_gpu()
 
         # Losses and optimizer
         self.bce_loss = nn.BCEWithLogitsLoss()
@@ -73,6 +71,18 @@ class GQA:
                                   t_total=t_total)
         else:
             self.optim = args.optimizer(list(self.model.parameters()), args.lr)
+
+        # Half Precision 
+        if args.fp16:
+            try:
+                from apex import amp
+            except ImportError:
+                raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
+            self.model, self.optim = amp.initialize(self.model, self.optim, opt_level='O1')
+
+        # Multi-GPU
+        if args.multiGPU:
+            self.model.lxrt_encoder.multi_gpu()
 
         self.output = args.output
         os.makedirs(self.output, exist_ok=True)
@@ -99,8 +109,18 @@ class GQA:
                     loss = self.bce_loss(logit, target)
                     loss = loss * logit.size(1)
 
-                loss.backward()
-                nn.utils.clip_grad_norm_(self.model.parameters(), 5.)
+                if args.fp16:
+                    try:
+                        from apex import amp
+                    except ImportError:
+                        raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
+                    with amp.scale_loss(loss, self.optim) as scaled_loss:
+                        scaled_loss.backward()
+                    torch.nn.utils.clip_grad_norm_(amp.master_params(self.optim), 5.)
+                else:
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), 5.)
+
                 self.optim.step()
 
                 score, label = logit.max(1)

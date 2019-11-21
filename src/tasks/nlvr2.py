@@ -49,11 +49,6 @@ class NLVR2:
         if args.load_lxmert is not None:
             self.model.lxrt_encoder.load(args.load_lxmert)
 
-        # GPU options
-        if args.multiGPU:
-            self.model.lxrt_encoder.multi_gpu()
-        self.model = self.model.cuda()
-
         # Losses and optimizer
         self.mce_loss = nn.CrossEntropyLoss(ignore_index=-1)
         if 'bert' in args.optim:
@@ -67,6 +62,21 @@ class NLVR2:
                                   t_total=t_total)
         else:
             self.optim = args.optimizer(list(self.model.parameters()), args.lr)
+
+        # Transfer model to GPU before apex.
+        self.model = self.model.cuda()
+
+        # Half Precision 
+        if args.fp16:
+            try:
+                from apex import amp
+            except ImportError:
+                raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
+            self.model, self.optim = amp.initialize(self.model, self.optim, opt_level='O1')
+
+        # GPU options
+        if args.multiGPU:
+            self.model.lxrt_encoder.multi_gpu()
 
         self.output = args.output
         os.makedirs(self.output, exist_ok=True)
@@ -87,8 +97,18 @@ class NLVR2:
 
                 loss = self.mce_loss(logit, label)
 
-                loss.backward()
-                nn.utils.clip_grad_norm_(self.model.parameters(), 5.)
+                if args.fp16:
+                    try:
+                        from apex import amp
+                    except ImportError:
+                        raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
+                    with amp.scale_loss(loss, self.optim) as scaled_loss:
+                        scaled_loss.backward()
+                    torch.nn.utils.clip_grad_norm_(amp.master_params(self.optim), 5.)
+                else:
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), 5.)
+
                 self.optim.step()
 
                 score, predict = logit.max(1)

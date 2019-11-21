@@ -46,6 +46,11 @@ def parse_args():
     parser.add_argument('--dropout', type=float, default=0.1)
     parser.add_argument('--seed', type=int, default=9595, help='random seed')
 
+    # Training configuration
+    parser.add_argument("--fp16", action='store_const', default=False, const=True)
+    parser.add_argument("--multiGPU", action='store_const', default=False, const=True)
+    parser.add_argument("--numWorkers", dest='num_workers', default=0)
+
     # Debugging
     parser.add_argument('--output', type=str, default='snap/test')
     parser.add_argument("--fast", action='store_const', default=False, const=True)
@@ -83,10 +88,6 @@ def parse_args():
     parser.add_argument("--qaSets", dest='qa_sets', default=None, type=str)
     parser.add_argument("--wordMaskRate", dest='word_mask_rate', default=0.15, type=float)
     parser.add_argument("--objMaskRate", dest='obj_mask_rate', default=0.15, type=float)
-
-    # Training configuration
-    parser.add_argument("--multiGPU", action='store_const', default=False, const=True)
-    parser.add_argument("--numWorkers", dest='num_workers', default=0)
 
     # Parse the arguments.
     args = parser.parse_args()

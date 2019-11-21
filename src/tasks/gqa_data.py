@@ -73,7 +73,8 @@ class GQABufferLoader():
         if key not in self.key2data:
             self.key2data[key] = load_obj_tsv(
                 path,
-                topk=number
+                topk=number,
+                fp16=args.fp16,
             )
         return self.key2data[key]
 

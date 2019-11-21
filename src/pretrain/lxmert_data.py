@@ -98,7 +98,7 @@ class LXMERTTorchDataset(Dataset):
         # Load the dataset
         img_data = []
         for source in self.raw_dataset.sources:
-            img_data.extend(load_obj_tsv(Split2ImgFeatPath[source], topk))
+            img_data.extend(load_obj_tsv(Split2ImgFeatPath[source], topk, args.fp16))
 
         self.imgid2img = {}
         for img_datum in img_data:
@@ -151,6 +151,8 @@ class LXMERTTorchDataset(Dataset):
         img_info = self.imgid2img[img_id]
         obj_num = img_info['num_boxes']
         feats = img_info['features'].copy()
+        if not args.fp16 and feats.dtype != np.float32:   # Save space in CPU memory with format float    16 (half-precision).
+            feats = feats.astype(np.float32)
         boxes = img_info['boxes'].copy()
         obj_labels = img_info['objects_id'].copy()
         obj_confs = img_info['objects_conf'].copy()

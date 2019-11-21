@@ -13,7 +13,7 @@ FIELDNAMES = ["img_id", "img_h", "img_w", "objects_id", "objects_conf",
               "attrs_id", "attrs_conf", "num_boxes", "boxes", "features"]
 
 
-def load_obj_tsv(fname, topk=None):
+def load_obj_tsv(fname, topk=None, fp16=False):
     """Load object features from tsv file.
 
     :param fname: The path to the tsv file.
@@ -43,6 +43,9 @@ def load_obj_tsv(fname, topk=None):
             ]
             for key, shape, dtype in decode_config:
                 item[key] = np.frombuffer(base64.b64decode(item[key]), dtype=dtype)
+
+                if fp16 and item[key].dtype == np.float32:
+                    item[key] = item[key].astype(np.float16)    # Save features as half-precision in memory.
                 item[key] = item[key].reshape(shape)
                 item[key].setflags(write=False)
 

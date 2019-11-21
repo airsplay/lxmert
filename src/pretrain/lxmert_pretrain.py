@@ -243,10 +243,7 @@ class LXMERT:
             # Load lxmert would not load the answer head.
             self.load_lxmert(args.load_lxmert)
 
-        # GPU Options
         self.model = self.model.cuda()
-        if args.multiGPU:
-            self.model = nn.DataParallel(self.model)
 
     def forward(self, examples):
         train_features = [convert_example_to_features(example, self.max_seq_length, self.tokenizer)
@@ -292,8 +289,19 @@ class LXMERT:
         if args.multiGPU:
             loss = loss.mean()
             losses = losses.mean(0)
-        loss.backward()
-        nn.utils.clip_grad_norm_(self.model.parameters(), 1.)
+
+        if args.fp16:
+            try:
+                from apex import amp
+            except ImportError:
+                raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
+            with amp.scale_loss(loss, optim) as scaled_loss:
+                scaled_loss.backward()
+            torch.nn.utils.clip_grad_norm_(amp.master_params(optim), 1.)
+        else:
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.)
+
         optim.step()
 
         return loss.item(), losses.cpu().numpy(), ans_logit
@@ -319,6 +327,18 @@ class LXMERT:
         print("Total Iters: %d" % t_total)
         print("Warm up Iters: %d" % warmup_iters)
         optim = BertAdam(self.model.parameters(), lr=args.lr, warmup=warmup_ratio, t_total=t_total)
+
+        # Half Precision 
+        if args.fp16:
+            try:
+                from apex import amp
+            except ImportError:
+                raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
+            self.model, optim = amp.initialize(self.model, optim)
+
+        # GPU Options
+        if args.multiGPU:
+            self.model = nn.DataParallel(self.model)
 
         # Train
         best_eval_loss = 9595.
