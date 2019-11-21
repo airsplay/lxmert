@@ -31,7 +31,6 @@ SPLIT2NAME = {
 }
 
 
-
 class VQADataset:
     """
     A VQA data example in json file:
@@ -96,16 +95,12 @@ class VQATorchDataset(Dataset):
         # Loading detection features to img_data
         img_data = []
         for split in dataset.splits:
-            load_topk = topk
-            if split == 'minival' and topk is None:
-                # Minival is 5K images in MS COCO,
-                # which is used in evaluating LXMERT pretraining performance.
-                # It is saved as the top 5K features in val2014_***.tsv
-                load_topk = 5000
+            # Minival is 5K images in MS COCO, which is used in evaluating VQA/LXMERT-pre-training.
+            # It is saved as the top 5K features in val2014_***.tsv
+            load_topk = 5000 if (split == 'minival' and topk is None) else topk
             img_data.extend(load_obj_tsv(
                 os.path.join(MSCOCO_IMGFEAT_ROOT, '%s_obj36.tsv' % (SPLIT2NAME[split])),
-                topk=load_topk,
-                fp16=args.fp16))
+                topk=load_topk))
 
         # Convert img list to dict
         self.imgid2img = {}
