@@ -141,8 +141,8 @@ class GQATorchDataset(Dataset):
         boxes = boxes.copy()
         boxes[:, (0, 2)] /= img_w
         boxes[:, (1, 3)] /= img_h
-        np.testing.assert_array_less(boxes, 1+1e-5)
-        np.testing.assert_array_less(-boxes, 0+1e-5)
+        np.testing.assert_array_less(boxes, 1+1e-2)
+        np.testing.assert_array_less(-boxes, 0+1e-2)
 
         # Create target
         if 'label' in datum:

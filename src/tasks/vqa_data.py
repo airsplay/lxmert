@@ -100,7 +100,8 @@ class VQATorchDataset(Dataset):
             load_topk = 5000 if (split == 'minival' and topk is None) else topk
             img_data.extend(load_obj_tsv(
                 os.path.join(MSCOCO_IMGFEAT_ROOT, '%s_obj36.tsv' % (SPLIT2NAME[split])),
-                topk=load_topk))
+                topk=load_topk,
+                fp16=args.fp16))
 
         # Convert img list to dict
         self.imgid2img = {}
@@ -137,8 +138,8 @@ class VQATorchDataset(Dataset):
         boxes = boxes.copy()
         boxes[:, (0, 2)] /= img_w
         boxes[:, (1, 3)] /= img_h
-        np.testing.assert_array_less(boxes, 1+1e-5)
-        np.testing.assert_array_less(-boxes, 0+1e-5)
+        np.testing.assert_array_less(boxes, 1+1e-2)
+        np.testing.assert_array_less(-boxes, 0+1e-2)
 
         # Provide label (target)
         if 'label' in datum:

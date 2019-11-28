@@ -70,11 +70,11 @@ class NLVR2TorchDataset(Dataset):
         # Loading detection features to img_data
         img_data = []
         if 'train' in dataset.splits:
-            img_data.extend(load_obj_tsv('data/nlvr2_imgfeat/train_obj36.tsv', topk=topk))
+            img_data.extend(load_obj_tsv('data/nlvr2_imgfeat/train_obj36.tsv', topk=topk, fp16=args.fp16))
         if 'valid' in dataset.splits:
-            img_data.extend(load_obj_tsv('data/nlvr2_imgfeat/valid_obj36.tsv', topk=topk))
+            img_data.extend(load_obj_tsv('data/nlvr2_imgfeat/valid_obj36.tsv', topk=topk, fp16=args.fp16))
         if 'test' in dataset.name:
-            img_data.extend(load_obj_tsv('data/nlvr2_imgfeat/test_obj36.tsv', topk=topk))
+            img_data.extend(load_obj_tsv('data/nlvr2_imgfeat/test_obj36.tsv', topk=topk, fp16=args.fp16))
         self.imgid2img = {}
         for img_datum in img_data:
             self.imgid2img[img_datum['img_id']] = img_datum
@@ -110,8 +110,8 @@ class NLVR2TorchDataset(Dataset):
             img_h, img_w = img_info['img_h'], img_info['img_w']
             boxes[..., (0, 2)] /= img_w
             boxes[..., (1, 3)] /= img_h
-            np.testing.assert_array_less(boxes, 1+1e-5)
-            np.testing.assert_array_less(-boxes, 0+1e-5)
+            np.testing.assert_array_less(boxes, 1+1e-2)
+            np.testing.assert_array_less(-boxes, 0+1e-2)
 
             boxes2.append(boxes)
             feats2.append(feats)

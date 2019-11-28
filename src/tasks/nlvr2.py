@@ -72,7 +72,7 @@ class NLVR2:
                 from apex import amp
             except ImportError:
                 raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
-            self.model, self.optim = amp.initialize(self.model, self.optim, opt_level='O1')
+            self.model, self.optim = amp.initialize(self.model, self.optim, opt_level='O2')
 
         # GPU options
         if args.multiGPU:

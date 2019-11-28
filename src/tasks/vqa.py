@@ -54,6 +54,9 @@ class VQA:
             load_lxmert_qa(args.load_lxmert_qa, self.model,
                            label2ans=self.train_tuple.dataset.label2ans)
 
+        # Transfer model to GPU before apex.
+        self.model = self.model.cuda()
+
         # Loss and Optimizer
         self.bce_loss = nn.BCEWithLogitsLoss()
         if 'bert' in args.optim:
@@ -68,8 +71,6 @@ class VQA:
         else:
             self.optim = args.optimizer(self.model.parameters(), args.lr)
 
-        # Transfer model to GPU before apex.
-        self.model = self.model.cuda()
 
         # Half Precision 
         if args.fp16:
@@ -77,7 +78,7 @@ class VQA:
                 from apex import amp
             except ImportError:
                 raise ImportError("Please install apex from https://www.github.com/nvidia/apex to use fp16 training.")
-            self.model, self.optim = amp.initialize(self.model, self.optim)
+            self.model, self.optim = amp.initialize(self.model, self.optim, opt_level='O2')
         
         # GPU options
         if args.multiGPU:
