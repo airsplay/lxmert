@@ -131,6 +131,8 @@ class LXRTEncoder(nn.Module):
         for key, value in state_dict.items():
             if key.startswith("module."):
                 new_state_dict[key[len("module."):]] = value
+            else:
+                new_state_dict[key] = value
         state_dict = new_state_dict
 
         # Print out the differences of pre-trained and model weights.
