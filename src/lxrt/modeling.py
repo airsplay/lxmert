@@ -735,14 +735,24 @@ class BertPreTrainedModel(nn.Module):
         try:
             resolved_archive_file = cached_path(archive_file, cache_dir=cache_dir)
         except EnvironmentError:
-            logger.error(
-                "Model name '{}' was not found in model name list ({}). "
-                "We assumed '{}' was a path or url but couldn't find any file "
-                "associated to this path or url.".format(
-                    pretrained_model_name_or_path,
-                    ', '.join(PRETRAINED_MODEL_ARCHIVE_MAP.keys()),
-                    archive_file))
-            return None
+            if pretrained_model_name_or_path == 'bert-base-uncased':
+                try:
+                    print("The BERT-weight-downloading query to AWS was time-out;" 
+                          "trying to download from UNC servers")
+                    archive_file = "https://nlp.cs.unc.edu/data/bert/bert-base-uncased.tar.gz"
+                    resolved_archive_file = cached_path(archive_file, cache_dir=cache_dir)
+                except EnvironmentError:
+                    print("The weight-downloading still crashed with link: %s, "
+                          "please check your network connection" % archive_file)
+                    return None
+            else:
+                logger.error(
+                        "Model name '{}' was not found in model name list ({}). "
+                        "We assumed '{}' was a path or url but couldn't find any file "
+                        "associated to this path or url.".format(
+                            pretrained_model_name_or_path,
+                            ', '.join(PRETRAINED_MODEL_ARCHIVE_MAP.keys()),
+                            archive_file))
         if resolved_archive_file == archive_file:
             logger.info("loading archive file {}".format(archive_file))
         else:
