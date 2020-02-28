@@ -2,6 +2,7 @@
 ## Introduction
 PyTorch code for the EMNLP 2019 paper ["LXMERT: Learning Cross-Modality Encoder Representations from Transformers"](https://arxiv.org/abs/1908.07490). Slides of our EMNLP 2019 talk are avialable [here](http://www.cs.unc.edu/~airsplay/EMNLP_2019_LXMERT_slides.pdf). 
 
+**IMPORTANT: To analyze the output of pre-trained model (instead of fine-tuning on downstreaming tasks), please load the weight `https://nlp.cs.unc.edu/data/github_pretrain/lxmert20/Epoch20_LXRT.pth`, which is trained as in section [pre-training](#pre-training). The default weight [here](#pre-trained-models) is trained with a slightly different protocal as this code.**
 
 
 ## Results (with this Github version)
