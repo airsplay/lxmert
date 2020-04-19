@@ -1,5 +1,5 @@
 # LXMERT: Learning Cross-Modality Encoder Representations from Transformers
-**Important: Due to a URL earthquake happend in our group, the previous links needs to be replaced. I tried my best to save every lifes in this document. If you find any link is not available, please do not hesitate to contact me. Thanks. **
+**Important: Due to a URL earthquake happend in our group, the previous links needs to be replaced. I tried my best to save every lifes in this document. If you find any link is not available, please do not hesitate to contact me. Thanks.**
 ## Introduction
 PyTorch code for the EMNLP 2019 paper ["LXMERT: Learning Cross-Modality Encoder Representations from Transformers"](https://arxiv.org/abs/1908.07490). Slides of our EMNLP 2019 talk are avialable [here](http://www.cs.unc.edu/~airsplay/EMNLP_2019_LXMERT_slides.pdf). 
 
