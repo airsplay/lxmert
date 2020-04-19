@@ -27,7 +27,7 @@ We are the **only** team ranking **top-3** in both challenges.
 The pre-trained model (870 MB) is available at http://nlp1.cs.unc.edu/data/model_LXRT.pth, and can be downloaded with:
 ```bash
 mkdir -p snap/pretrained 
-wget --no-check-certificate http://nlp1.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
+wget --no-check-certificate https://nlp1.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
 ```
 
 
