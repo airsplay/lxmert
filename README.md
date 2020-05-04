@@ -142,9 +142,9 @@ The original GQA dataset is available [in the Download section of its website](h
 and the script to preprocess these datasets is under `data/gqa/process_raw_data_scripts`.
     ```bash
     mkdir -p data/gqa
-    wget --no-check-certificate https://https://nlp1.cs.unc.edu/data/lxmert_data/gqa/train.json -P data/gqa/
-    wget --no-check-certificate https://https://nlp1.cs.unc.edu/data/lxmert_data/gqa/valid.json -P data/gqa/
-    wget --no-check-certificate https://https://nlp1.cs.unc.edu/data/lxmert_data/gqa/testdev.json -P data/gqa/
+    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/gqa/train.json -P data/gqa/
+    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/gqa/valid.json -P data/gqa/
+    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/gqa/testdev.json -P data/gqa/
     ```
 3. Download Faster R-CNN features for Visual Genome and GQA testing images (30 GB).
 GQA's training and validation data are collected from Visual Genome.
@@ -153,9 +153,9 @@ The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
     ```bash
     mkdir -p data/vg_gqa_imgfeat
-    wget --no-check-certificate https://https://nlp1.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
+    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
     unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_gqa_obj36.zip
-    wget --no-check-certificate https://https://nlp1.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/gqa_testdev_obj36.zip -P data/vg_gqa_imgfeat
+    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/gqa_testdev_obj36.zip -P data/vg_gqa_imgfeat
     unzip data/vg_gqa_imgfeat/gqa_testdev_obj36.zip -d data && rm data/vg_gqa_imgfeat/gqa_testdev_obj36.zip
     ```
 
