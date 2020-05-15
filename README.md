@@ -535,7 +535,7 @@ We demonstrate how to extract Faster R-CNN features of NLVR2 images.
 
 2. Download the pre-trained Faster R-CNN model. Instead of using the default pre-trained model (trained with 10 to 100 boxes), we use the ['alternative pretrained model'](https://github.com/peteanderson80/bottom-up-attention#demo) which was trained with 36 boxes. 
     ```bash
-    wget --no-check-certificate 'https://www.dropbox.com/s/nu6jwhc88ujbw1v/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/nlvr2_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
+    wget --no-check-certificate 'https://www.dropbox.com/s/2h4hmgcvpaewizu/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/nlvr2_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
     ```
 
 3. Run docker container with command:
@@ -570,7 +570,7 @@ The features will be saved in `train.tsv`, `valid.tsv`, and `test.tsv` under the
 2. Download the pre-trained Faster R-CNN model. 
     ```bash
     mkdir -p data/mscoco_imgfeat
-    wget --no-check-certificate 'https://www.dropbox.com/s/nu6jwhc88ujbw1v/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/mscoco_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
+    wget --no-check-certificate 'https://www.dropbox.com/s/2h4hmgcvpaewizu/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/mscoco_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
     ```
 
 3. Run the docker container with the command:
