@@ -86,6 +86,7 @@ class VQATorchDataset(Dataset):
 
         if args.tiny:
             topk = TINY_IMG_NUM
+            print("####################### Topk for tiny",topk)
         elif args.fast:
             topk = FAST_IMG_NUM
         else:
@@ -113,6 +114,7 @@ class VQATorchDataset(Dataset):
                 self.data.append(datum)
         print("Use %d data in torch dataset" % (len(self.data)))
         print()
+        np.save('vqa_img_feat_data_tiny.npy', self.data)
 
     def __len__(self):
         return len(self.data)
@@ -130,6 +132,7 @@ class VQATorchDataset(Dataset):
         feats = img_info['features'].copy()
         boxes = img_info['boxes'].copy()
         assert obj_num == len(boxes) == len(feats)
+        #print("################################################# Number of boxes is:/t", len(boxes))
 
         # Normalize the boxes (to 0 ~ 1)
         img_h, img_w = img_info['img_h'], img_info['img_w']

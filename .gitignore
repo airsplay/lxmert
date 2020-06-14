@@ -1,3 +1,8 @@
 *.caffemodel
 *.tsv
 /snap
+data/mscoco_imgfeat/
+/model
+run/snap/
+
+

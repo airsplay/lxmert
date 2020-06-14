@@ -20,8 +20,8 @@ import os
 import torch
 import torch.nn as nn
 
-from lxrt.tokenization import BertTokenizer
-from lxrt.modeling import LXRTFeatureExtraction as VisualBertForLXRFeature, VISUAL_CONFIG
+from src.lxrt.tokenization import BertTokenizer
+from src.lxrt.modeling import LXRTFeatureExtraction as VisualBertForLXRFeature, VISUAL_CONFIG
 
 
 class InputFeatures(object):
@@ -110,9 +110,9 @@ class LXRTEncoder(nn.Module):
         train_features = convert_sents_to_features(
             sents, self.max_seq_length, self.tokenizer)
 
-        input_ids = torch.tensor([f.input_ids for f in train_features], dtype=torch.long).cuda()
-        input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long).cuda()
-        segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long).cuda()
+        input_ids = torch.tensor([f.input_ids for f in train_features], dtype=torch.long)
+        input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
+        segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
 
         output = self.model(input_ids, segment_ids, input_mask,
                             visual_feats=feats,
@@ -126,7 +126,7 @@ class LXRTEncoder(nn.Module):
     def load(self, path):
         # Load state_dict from snapshot file
         print("Load LXMERT pre-trained model from %s" % path)
-        state_dict = torch.load("%s_LXRT.pth" % path)
+        state_dict = torch.load("%s_LXRT.pth" % path, map_location=torch.device('cpu'))
         new_state_dict = {}
         for key, value in state_dict.items():
             if key.startswith("module."):

@@ -2,8 +2,8 @@
 # Copyleft 2019 project LXRT.
 
 import torch.nn as nn
-from lxrt.modeling import GeLU, BertLayerNorm
-from lxrt.entry import LXRTEncoder
+from src.lxrt.modeling import GeLU, BertLayerNorm
+from src.lxrt.entry import LXRTEncoder
 from param import args
 
 

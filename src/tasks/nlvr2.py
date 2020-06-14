@@ -10,8 +10,8 @@ import torch.nn as nn
 from torch.utils.data.dataloader import DataLoader
 
 from param import args
-from tasks.nlvr2_model import NLVR2Model
-from tasks.nlvr2_data import NLVR2Dataset, NLVR2TorchDataset, NLVR2Evaluator
+from src.tasks.nlvr2_model import NLVR2Model
+from src.tasks.nlvr2_data import NLVR2Dataset, NLVR2TorchDataset, NLVR2Evaluator
 
 DataTuple = collections.namedtuple("DataTuple", 'dataset loader evaluator')
 
@@ -60,7 +60,7 @@ class NLVR2:
             batch_per_epoch = len(self.train_tuple.loader)
             t_total = int(batch_per_epoch * args.epochs)
             print("Total Iters: %d" % t_total)
-            from lxrt.optimization import BertAdam
+            from src.lxrt.optimization import BertAdam
             self.optim = BertAdam(list(self.model.parameters()),
                                   lr=args.lr,
                                   warmup=0.1,

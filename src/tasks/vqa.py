@@ -3,6 +3,7 @@
 
 import os
 import collections
+import numpy as np
 
 import torch
 import torch.nn as nn
@@ -149,6 +150,7 @@ class VQA:
 
     def evaluate(self, eval_tuple: DataTuple, dump=None):
         """Evaluate all data in data_tuple."""
+        print("############################### Evaluation tuple size : ",len(eval_tuple))
         quesid2ans = self.predict(eval_tuple, dump)
         return eval_tuple.evaluator.evaluate(quesid2ans)
 

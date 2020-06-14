@@ -26,6 +26,7 @@ import tarfile
 import tempfile
 import sys
 from io import open
+import numpy as np
 
 import torch
 from torch import nn
@@ -183,7 +184,9 @@ class BertConfig(object):
                  attention_probs_dropout_prob=0.1,
                  max_position_embeddings=512,
                  type_vocab_size=2,
-                 initializer_range=0.02):
+                 initializer_range=0.02,
+                 flag=False,
+                 modality=""):
         """Constructs BertConfig.
 
         Args:
@@ -407,11 +410,20 @@ class BertOutput(nn.Module):
         self.dense = nn.Linear(config.intermediate_size, config.hidden_size)
         self.LayerNorm = BertLayerNorm(config.hidden_size, eps=1e-12)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
+        self.con = config
 
     def forward(self, hidden_states, input_tensor):
         hidden_states = self.dense(hidden_states)
+        activations = hidden_states
         hidden_states = self.dropout(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
+        if self.con.flag == True:
+            if self.con.modality == 'lang':
+                lang_output_numpy = activations.detach().cpu().numpy()
+                np.save("lang_output_activations_.npy", lang_output_numpy)
+            else:
+                visn_output_numpy = activations.detach().cpu().numpy()
+                np.save("visn_output_activations_.npy", visn_output_numpy)
         return hidden_states
 
 
@@ -437,8 +449,12 @@ class BertLayer(nn.Module):
 
 
 class LXRTXLayer(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, num_layers):
         super().__init__()
+        self.con = config
+        self.con.flag = True
+        self.con.modality = 'lang'
+        self.num_cross_layers = num_layers
         # The cross-attention Layer
         self.visual_attention = BertCrossattLayer(config)
 
@@ -448,9 +464,11 @@ class LXRTXLayer(nn.Module):
 
         # Intermediate and Output Layers (FFNs)
         self.lang_inter = BertIntermediate(config)
-        self.lang_output = BertOutput(config)
+        self.lang_output = BertOutput(self.con)
         self.visn_inter = BertIntermediate(config)
-        self.visn_output = BertOutput(config)
+
+        self.con.modality = 'visn'
+        self.visn_output = BertOutput(self.con)
 
     def cross_att(self, lang_input, lang_attention_mask, visn_input, visn_attention_mask):
         # Cross Attention
@@ -484,6 +502,12 @@ class LXRTXLayer(nn.Module):
         lang_att_output, visn_att_output = self.self_att(lang_att_output, lang_attention_mask,
                                                          visn_att_output, visn_attention_mask)
         lang_output, visn_output = self.output_fc(lang_att_output, visn_att_output)
+
+        #lang_output_numpy = lang_output.detach().cpu().numpy()
+        #visn_output_numpy = visn_output.detach().cpu().numpy()
+
+        #np.save("lang_output_activations_"+str(self.num_cross_layers)+".npy", lang_output_numpy)
+        #np.save("vision_output_activations_"+str(self.num_cross_layers)+".npy", visn_output_numpy)
 
         return lang_output, visn_output
 
@@ -537,7 +561,7 @@ class LXRTEncoder(nn.Module):
             [BertLayer(config) for _ in range(self.num_l_layers)]
         )
         self.x_layers = nn.ModuleList(
-            [LXRTXLayer(config) for _ in range(self.num_x_layers)]
+            [LXRTXLayer(config, i) for i in range(self.num_x_layers)]
         )
         self.r_layers = nn.ModuleList(
             [BertLayer(config) for _ in range(self.num_r_layers)]
@@ -883,6 +907,11 @@ class LXRTModel(BertPreTrainedModel):
             visn_attention_mask=extended_visual_attention_mask)
         pooled_output = self.pooler(lang_feats)
 
+        #lang_output_numpy = lang_feats.detach().cpu().numpy()
+        #visn_output_numpy = visn_feats.detach().cpu().numpy()
+
+        #np.save("lang_output_activations_.npy", lang_output_numpy)
+        #np.save("vision_output_activations_.npy", visn_output_numpy)
         return (lang_feats, visn_feats), pooled_output
 
 
