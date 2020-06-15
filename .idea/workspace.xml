@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2fdf57e-31ff-482b-a02b-c6a070d8d7cf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/lxrt/entry.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lxrt/entry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/get_activations_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/get_activations_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lxrt/modeling.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/lxrt/modeling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/param.py" beforeDir="false" afterPath="$PROJECT_DIR$/param.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tasks/nlvr2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/nlvr2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tasks/nlvr2_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/nlvr2_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tasks/nlvr2_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/nlvr2_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tasks/vqa.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/vqa.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tasks/vqa_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/vqa_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tasks/visn_output_activations_.npy" beforeDir="false" afterPath="$PROJECT_DIR$/src/tasks/visn_output_activations_.npy" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,11 +15,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/get_activations.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1292">
-              <caret line="88" column="9" selection-start-line="88" selection-start-column="9" selection-end-line="88" selection-end-column="9" />
+            <state relative-caret-position="86">
+              <caret line="71" selection-start-line="71" selection-end-line="71" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -33,22 +28,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/tasks/nlvr2_data.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="35">
-              <caret line="42" column="18" selection-start-line="42" selection-start-column="13" selection-end-line="42" selection-end-column="18" />
-              <folding>
-                <element signature="e#46#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/get_activations_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="663">
-              <caret line="39" column="9" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+            <state relative-caret-position="-299">
+              <caret line="25" selection-start-line="25" selection-end-line="25" />
               <folding>
                 <element signature="e#46#67#0" expanded="true" />
               </folding>
@@ -57,31 +40,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lxrt/entry.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1488">
-              <caret line="122" column="12" selection-start-line="122" selection-start-column="12" selection-end-line="122" selection-end-column="12" />
-              <folding>
-                <element signature="e#741#750#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/torch/nn/modules/module.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="540" selection-start-line="540" selection-end-line="540" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lxrt/modeling.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1791">
-              <caret line="422" column="23" selection-start-line="422" selection-start-column="16" selection-end-line="422" selection-end-column="23" />
+            <state relative-caret-position="414">
+              <caret line="427" column="32" selection-start-line="427" selection-start-column="32" selection-end-line="427" selection-end-column="32" />
               <folding>
                 <element signature="e#1117#1899#0" />
                 <element signature="e#2060#4374#0" />
@@ -94,41 +56,23 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/get_activations_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="827">
-              <caret line="175" column="3" selection-start-line="175" selection-start-column="3" selection-end-line="175" selection-end-column="3" />
+            <state relative-caret-position="147">
+              <caret line="151" column="37" selection-start-line="151" selection-start-column="37" selection-end-line="151" selection-end-column="37" />
               <folding>
                 <element signature="e#46#57#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/numpy/core/shape_base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="348" selection-start-line="348" selection-end-line="348" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/numpy/testing/_private/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="1124" selection-start-line="1124" selection-end-line="1124" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/torch/utils/data/dataloader.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="70">
-              <caret line="345" selection-start-line="345" selection-end-line="345" />
             </state>
           </provider>
         </entry>
@@ -169,11 +113,11 @@
       <find>__getitem__</find>
       <find>getitem</find>
       <find>np.</find>
-      <find>np.save</find>
       <find>id2</find>
       <find>id2da</find>
       <find>ssert img_num</find>
       <find>get_tuple</find>
+      <find>np.save</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\asmit\Desktop\Guided Research\lxmert</dir>
@@ -185,7 +129,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/lxrt/modeling.py" />
         <option value="$PROJECT_DIR$/src/tasks/vqa_data.py" />
         <option value="$PROJECT_DIR$/src/tasks/vqa.py" />
         <option value="$PROJECT_DIR$/get_activations.bash" />
@@ -203,8 +146,10 @@
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/src/lxrt/entry.py" />
         <option value="$PROJECT_DIR$/src/get_activations_model.py" />
-        <option value="$PROJECT_DIR$/src/get_activations_data.py" />
         <option value="$PROJECT_DIR$/get_activations.py" />
+        <option value="$PROJECT_DIR$/src/get_activations_data.py" />
+        <option value="$PROJECT_DIR$/src/lxrt/modeling.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -231,18 +176,7 @@
             <path>
               <item name="lxmert" type="b2602c69:ProjectViewProjectNode" />
               <item name="lxmert" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lxmert" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lxmert" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lxmert" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lxmert" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lxrt" type="462c0819:PsiDirectoryNode" />
+              <item name="results" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -386,13 +320,13 @@
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23688394" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23688394" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49920508" visible="true" weight="0.40674955" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.5204263" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49920508" visible="true" weight="0.33570158" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.19893429" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -415,11 +349,6 @@
           <url>file://$PROJECT_DIR$/src/get_activations_model.py</url>
           <line>25</line>
           <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/get_activations.py</url>
-          <line>17</line>
-          <option name="timeStamp" value="33" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -633,21 +562,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lxrt/modeling.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1791">
-          <caret line="422" column="23" selection-start-line="422" selection-start-column="16" selection-end-line="422" selection-end-column="23" />
-          <folding>
-            <element signature="e#1117#1899#0" />
-            <element signature="e#2060#4374#0" />
-            <element signature="e#4394#4760#0" />
-            <element signature="e#4790#5198#0" />
-            <element signature="e#5219#5246#0" />
-            <element signature="e#5357#6137#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/torch/nn/modules/module.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
@@ -665,33 +579,97 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/get_activations_model.py">
+    <entry file="file://$PROJECT_DIR$/get_activations.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
-          <caret line="39" column="9" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+        <state relative-caret-position="86">
+          <caret line="71" selection-start-line="71" selection-end-line="71" />
           <folding>
-            <element signature="e#46#67#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/get_activations_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="827">
-          <caret line="175" column="3" selection-start-line="175" selection-start-column="3" selection-end-line="175" selection-end-column="3" />
+        <state relative-caret-position="147">
+          <caret line="151" column="37" selection-start-line="151" selection-start-column="37" selection-end-line="151" selection-end-column="37" />
           <folding>
             <element signature="e#46#57#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/get_activations.py">
+    <entry file="file://$PROJECT_DIR$/src/get_activations_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1292">
-          <caret line="88" column="9" selection-start-line="88" selection-start-column="9" selection-end-line="88" selection-end-column="9" />
+        <state relative-caret-position="-299">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#46#67#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/numpy/core/_asarray.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="137" selection-start-line="137" selection-end-line="137" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/numpy/lib/npyio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="552" selection-start-line="552" selection-end-line="552" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/re.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="300" selection-start-line="300" selection-end-line="300" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/tokenize.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="152" selection-start-line="152" selection-end-line="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/sre_compile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="539" selection-start-line="539" selection-end-line="539" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch_3.6/Lib/site-packages/numpy/lib/format.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="555" selection-start-line="555" selection-end-line="555" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lxrt/modeling.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="427" column="32" selection-start-line="427" selection-start-column="32" selection-end-line="427" selection-end-column="32" />
+          <folding>
+            <element signature="e#1117#1899#0" />
+            <element signature="e#2060#4374#0" />
+            <element signature="e#4394#4760#0" />
+            <element signature="e#4790#5198#0" />
+            <element signature="e#5219#5246#0" />
+            <element signature="e#5357#6137#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
         </state>
       </provider>
     </entry>

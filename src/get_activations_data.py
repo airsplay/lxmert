@@ -148,29 +148,17 @@ class NLVR2Evaluator:
 
     def evaluate(self, quesid2ans: dict):
         score = 0.
-        for quesid, ans in quesid2ans.items():
-            datum = self.dataset.id2datum[quesid]
-            label = datum['label']
-            if ans == label:
-                score += 1
+        score += 1
         return score / len(quesid2ans)
 
-    '''
+
 
     def dump_result(self, quesid2ans: dict, path):
-        """
-        Dump result to a CSV file, which is compatible with NLVR2 evaluation system.
-        NLVR2 CSV file requirement:
-            Each line contains: identifier, answer
-
-        :param quesid2ans: nlvr2 uid to ans (either "True" or "False")
-        :param path: The desired path of saved file.
-        :return:
-        """
-        path = r"C:\Users\asmit\Desktop\Guided Research\lxmert\snap"
+        return
+        '''
         with open(path, 'w') as f:
             for uid, ans in quesid2ans.items():
                 idt = self.dataset.id2datum[uid]["identifier"]
                 ans = 'True' if ans == 1 else 'False'
                 f.write("%s,%s\n" % (idt, ans))
-'''
+        '''

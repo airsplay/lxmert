@@ -5,4 +5,4 @@ data/mscoco_imgfeat/
 /model
 run/snap/
 
-
+/results

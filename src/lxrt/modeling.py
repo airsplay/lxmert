@@ -418,12 +418,14 @@ class BertOutput(nn.Module):
         hidden_states = self.dropout(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
         if self.con.flag == True:
+            path = r'C:\Users\asmit\Desktop\Guided Research\lxmert\results'
             if self.con.modality == 'lang':
                 lang_output_numpy = activations.detach().cpu().numpy()
-                np.save("lang_output_activations_.npy", lang_output_numpy)
+                np.save(path + r"\lang_output_activations_.npy", lang_output_numpy)
             else:
                 visn_output_numpy = activations.detach().cpu().numpy()
-                np.save("visn_output_activations_.npy", visn_output_numpy)
+
+                np.save(path + r"\visn_output_activations_.npy", visn_output_numpy)
         return hidden_states
 
 
