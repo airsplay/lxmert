@@ -1,9 +1,11 @@
 # LXMERT: Learning Cross-Modality Encoder Representations from Transformers
 
+**Our servers break again :(. I have updated the links so that they should work fine now. Sorry for the inconvenience. Please let me for any further issues. Thanks! --Hao, Dec 03**
+
 ## Introduction
 PyTorch code for the EMNLP 2019 paper ["LXMERT: Learning Cross-Modality Encoder Representations from Transformers"](https://arxiv.org/abs/1908.07490). Slides of our EMNLP 2019 talk are avialable [here](http://www.cs.unc.edu/~airsplay/EMNLP_2019_LXMERT_slides.pdf). 
 
-- To analyze the output of pre-trained model (instead of fine-tuning on downstreaming tasks), please load the weight `https://nlp1.cs.unc.edu/data/github_pretrain/lxmert20/Epoch20_LXRT.pth`, which is trained as in section [pre-training](#pre-training). The default weight [here](#pre-trained-models) is trained with a slightly different protocal as this code.
+- To analyze the output of pre-trained model (instead of fine-tuning on downstreaming tasks), please load the weight `https://nlp.cs.unc.edu/data/github_pretrain/lxmert20/Epoch20_LXRT.pth`, which is trained as in section [pre-training](#pre-training). The default weight [here](#pre-trained-models) is trained with a slightly different protocal as this code.
 
 
 ## Results (with this Github version)
@@ -24,17 +26,17 @@ We are the **only** team ranking **top-3** in both challenges.
 
 
 ## Pre-trained models
-The pre-trained model (870 MB) is available at http://nlp1.cs.unc.edu/data/model_LXRT.pth, and can be downloaded with:
+The pre-trained model (870 MB) is available at http://nlp.cs.unc.edu/data/model_LXRT.pth, and can be downloaded with:
 ```bash
 mkdir -p snap/pretrained 
-wget --no-check-certificate https://nlp1.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
+wget https://nlp.cs.unc.edu/data/model_LXRT.pth -P snap/pretrained
 ```
 
 
 If download speed is slower than expected, the pre-trained model could also be downloaded from [other sources](#alternative-dataset-and-features-download-links).
 Please help put the downloaded file at `snap/pretrained/model_LXRT.pth`.
 
-We also provide data and commands to pre-train the model in [pre-training](#pre-training). The default setup needs 4 GPUs and takes around a week to finish. The pre-trained weights with this code base could be downloaded from `https://nlp1.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, `XX` from 01 to 12. It is pre-trained for 12 epochs (instead of 20 in EMNLP paper) thus the fine-tuned reuslts are about 0.3% lower on each datasets. 
+We also provide data and commands to pre-train the model in [pre-training](#pre-training). The default setup needs 4 GPUs and takes around a week to finish. The pre-trained weights with this code base could be downloaded from `https://nlp.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, `XX` from 01 to 12. It is pre-trained for 12 epochs (instead of 20 in EMNLP paper) thus the fine-tuned reuslts are about 0.3% lower on each datasets. 
 
 
 
@@ -68,18 +70,18 @@ source name_of_environment/bin/activate
 2. Download the re-distributed json files for VQA 2.0 dataset. The raw VQA 2.0 dataset could be downloaded from the [official website](https://visualqa.org/download.html).
     ```bash
     mkdir -p data/vqa
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vqa/train.json -P data/vqa/
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vqa/nominival.json -P  data/vqa/
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vqa/minival.json -P data/vqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/vqa/train.json -P data/vqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/vqa/nominival.json -P  data/vqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/vqa/minival.json -P data/vqa/
     ```
 3. Download faster-rcnn features for MS COCO train2014 (17 GB) and val2014 (8 GB) images (VQA 2.0 is collected on MS COCO dataset).
 The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
     ```bash
     mkdir -p data/mscoco_imgfeat
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
     unzip data/mscoco_imgfeat/train2014_obj36.zip -d data/mscoco_imgfeat && rm data/mscoco_imgfeat/train2014_obj36.zip
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/val2014_obj36.zip -P data/mscoco_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/val2014_obj36.zip -P data/mscoco_imgfeat
     unzip data/mscoco_imgfeat/val2014_obj36.zip -d data && rm data/mscoco_imgfeat/val2014_obj36.zip
     ```
 
@@ -106,11 +108,11 @@ bash run/vqa_test.bash 0 vqa_lxr955_results --test minival --load snap/vqa/vqa_l
 #### Submitted to VQA test server
 1. Download our re-distributed json file containing VQA 2.0 test data.
     ```bash
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vqa/test.json -P data/vqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/vqa/test.json -P data/vqa/
     ```
 2. Download the faster rcnn features for MS COCO test2015 split (16 GB).
     ```bash
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/test2015_obj36.zip -P data/mscoco_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/test2015_obj36.zip -P data/mscoco_imgfeat
     unzip data/mscoco_imgfeat/test2015_obj36.zip -d data && rm data/mscoco_imgfeat/test2015_obj36.zip
     ```
 3. Since VQA submission system requires submitting whole test data, we need to run inference over all test splits 
@@ -142,9 +144,9 @@ The original GQA dataset is available [in the Download section of its website](h
 and the script to preprocess these datasets is under `data/gqa/process_raw_data_scripts`.
     ```bash
     mkdir -p data/gqa
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/gqa/train.json -P data/gqa/
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/gqa/valid.json -P data/gqa/
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/gqa/testdev.json -P data/gqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/gqa/train.json -P data/gqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/gqa/valid.json -P data/gqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/gqa/testdev.json -P data/gqa/
     ```
 3. Download Faster R-CNN features for Visual Genome and GQA testing images (30 GB).
 GQA's training and validation data are collected from Visual Genome.
@@ -153,9 +155,9 @@ The image features are
 also available on Google Drive and Baidu Drive (see [Alternative Download](#alternative-dataset-and-features-download-links) for details).
     ```bash
     mkdir -p data/vg_gqa_imgfeat
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
     unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_gqa_obj36.zip
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/gqa_testdev_obj36.zip -P data/vg_gqa_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/gqa_testdev_obj36.zip -P data/vg_gqa_imgfeat
     unzip data/vg_gqa_imgfeat/gqa_testdev_obj36.zip -d data && rm data/vg_gqa_imgfeat/gqa_testdev_obj36.zip
     ```
 
@@ -193,7 +195,7 @@ want to have the exact number without submitting.
 #### Submitted to GQA test server
 1. Download our re-distributed json file containing GQA test data.
     ```bash
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/gqa/submit.json -P data/gqa/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/gqa/submit.json -P data/gqa/
     ```
 
 2. Since GQA submission system requires submitting the whole test data, 
@@ -237,9 +239,9 @@ To access to the original images, please follow the instructions on [NLVR2 offic
 The images could either be downloaded with the urls or by signing an agreement form for data usage. And the feature could be extracted as described in [feature extraction](#faster-r-cnn-feature-extraction)
     ```bash
     mkdir -p data/nlvr2_imgfeat
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/train_obj36.zip -P data/nlvr2_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/train_obj36.zip -P data/nlvr2_imgfeat
     unzip data/nlvr2_imgfeat/train_obj36.zip -d data && rm data/nlvr2_imgfeat/train_obj36.zip
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/valid_obj36.zip -P data/nlvr2_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/valid_obj36.zip -P data/nlvr2_imgfeat
     unzip data/nlvr2_imgfeat/valid_obj36.zip -d data && rm data/nlvr2_imgfeat/valid_obj36.zip
     ```
 
@@ -262,7 +264,7 @@ The result on NLVR2 validation (dev) set would be around **74.0** to **74.5**.
 #### Inference on Public Test Split
 1. Download NLVR2 image features for the public test split (1.6 GB).
     ```bash
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/test_obj36.zip -P data/nlvr2_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/nlvr2_imgfeat/test_obj36.zip -P data/nlvr2_imgfeat
     unzip data/nlvr2_imgfeat/test_obj36.zip -d data/nlvr2_imgfeat && rm data/nlvr2_imgfeat/test_obj36.zip
     ```
 
@@ -308,25 +310,25 @@ bash run/vqa_finetune.bash 0 --fast
 1. Download our aggregated LXMERT dataset from MS COCO, Visual Genome, VQA, and GQA (around 700MB in total). The joint answer labels are saved in `data/lxmert/all_ans.json`.
     ```bash
     mkdir -p data/lxmert
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/lxmert/mscoco_train.json -P data/lxmert/
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/lxmert/mscoco_nominival.json -P data/lxmert/
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/lxmert/vgnococo.json -P data/lxmert/
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/lxmert/mscoco_minival.json -P data/lxmert/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_train.json -P data/lxmert/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_nominival.json -P data/lxmert/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/lxmert/vgnococo.json -P data/lxmert/
+    wget https://nlp.cs.unc.edu/data/lxmert_data/lxmert/mscoco_minival.json -P data/lxmert/
     ```
 
 2. [*Skip this if you have run [VQA fine-tuning](#vqa).*] Download the detection features for MS COCO images.
     ```bash
     mkdir -p data/mscoco_imgfeat
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/train2014_obj36.zip -P data/mscoco_imgfeat
     unzip data/mscoco_imgfeat/train2014_obj36.zip -d data/mscoco_imgfeat && rm data/mscoco_imgfeat/train2014_obj36.zip
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/val2014_obj36.zip -P data/mscoco_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/mscoco_imgfeat/val2014_obj36.zip -P data/mscoco_imgfeat
     unzip data/mscoco_imgfeat/val2014_obj36.zip -d data && rm data/mscoco_imgfeat/val2014_obj36.zip
     ```
 
 3. [*Skip this if you have run [GQA fine-tuning](#gqa).*] Download the detection features for Visual Genome images.
     ```bash
     mkdir -p data/vg_gqa_imgfeat
-    wget --no-check-certificate https://nlp1.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
+    wget https://nlp.cs.unc.edu/data/lxmert_data/vg_gqa_imgfeat/vg_gqa_obj36.zip -P data/vg_gqa_imgfeat
     unzip data/vg_gqa_imgfeat/vg_gqa_obj36.zip -d data && rm data/vg_gqa_imgfeat/vg_gqa_obj36.zip
     ```
 
@@ -346,7 +348,7 @@ The pre-training finishes in **8.5 days** on **4 GPUs**.  By the way, I hope tha
     >
     > GPU Types: We find that either Titan XP, GTX 2080, and Titan V could support this pre-training. However, GTX 1080, with its 11G memory, is a little bit small thus please change the batch_size to 224 (instead of 256).
 
-6. I have **verified these pre-training commands** with 12 epochs. The pre-trained weights from previous process could be downloaded from `https://nlp1.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, XX from `01` to `12`. The results are roughly the same (around 0.3% lower in downstream tasks because of fewer epochs). 
+6. I have **verified these pre-training commands** with 12 epochs. The pre-trained weights from previous process could be downloaded from `https://nlp.cs.unc.edu/data/github_pretrain/lxmert/EpochXX_LXRT.pth`, XX from `01` to `12`. The results are roughly the same (around 0.3% lower in downstream tasks because of fewer epochs). 
 
 7. Explanation of arguments in the pre-training script `run/lxmert_pretrain.bash`:
     ```bash
@@ -535,7 +537,7 @@ We demonstrate how to extract Faster R-CNN features of NLVR2 images.
 
 2. Download the pre-trained Faster R-CNN model. Instead of using the default pre-trained model (trained with 10 to 100 boxes), we use the ['alternative pretrained model'](https://github.com/peteanderson80/bottom-up-attention#demo) which was trained with 36 boxes. 
     ```bash
-    wget --no-check-certificate 'https://www.dropbox.com/s/2h4hmgcvpaewizu/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/nlvr2_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
+    wget 'https://www.dropbox.com/s/2h4hmgcvpaewizu/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/nlvr2_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
     ```
 
 3. Run docker container with command:
@@ -570,7 +572,7 @@ The features will be saved in `train.tsv`, `valid.tsv`, and `test.tsv` under the
 2. Download the pre-trained Faster R-CNN model. 
     ```bash
     mkdir -p data/mscoco_imgfeat
-    wget --no-check-certificate 'https://www.dropbox.com/s/2h4hmgcvpaewizu/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/mscoco_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
+    wget 'https://www.dropbox.com/s/2h4hmgcvpaewizu/resnet101_faster_rcnn_final_iter_320000.caffemodel?dl=1' -O data/mscoco_imgfeat/resnet101_faster_rcnn_final_iter_320000.caffemodel
     ```
 
 3. Run the docker container with the command:
